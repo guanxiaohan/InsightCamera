@@ -1,4 +1,17 @@
 <RCC>
-    <qresource prefix="MainInterface">
+    <qresource prefix="/MainInterface">
+        <file alias="MenuIcon1">Images/Menu1.svg</file>
+        <file alias="StyleSheet">StyleSheets/StyleSheet.qss</file>
+        <file alias="MenuIcon2">Images/Menu2.svg</file>
+        <file alias="MenuIcon3">Images/Menu3.svg</file>
+        <file alias="MenuIcon4">Images/Menu4.svg</file>
+        <file alias="SelectIcon1">Images/Select1.svg</file>
+        <file alias="SelectIcon2">Images/Select2.svg</file>
+        <file alias="SelectIcon3">Images/Select3.svg</file>
+        <file alias="SelectIcon4">Images/Select4.svg</file>
+        <file alias="PenIcon1">Images/Pen1.svg</file>
+        <file alias="PenIcon2">Images/Pen2.svg</file>
+        <file alias="PenIcon3">Images/Pen3.svg</file>
+        <file alias="PenIcon4">Images/Pen4.svg</file>
     </qresource>
 </RCC>

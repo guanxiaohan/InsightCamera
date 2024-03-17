@@ -19,14 +19,13 @@ bool CameraManager::checkCameraAvailablity()
 	return false;
 }
 
-inline const QList<QCameraDevice> CameraManager::getAvailableCameras()
+const QList<QCameraDevice> CameraManager::getAvailableCameras()
 {
 	return QMediaDevices::videoInputs();
 }
 
-inline void CameraManager::setCamera(QCameraDevice device)
+void CameraManager::setCamera(QCameraDevice device)
 {
-	qDebug() << "[Qt Output] Using the camera: " << device.description();
 	inputCamera = new QCamera(device);
 	inputCamera->setActive(true);
 	outputAvailable = true;

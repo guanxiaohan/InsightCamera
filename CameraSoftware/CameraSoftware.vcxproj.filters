@@ -46,6 +46,12 @@
     <ClCompile Include="FrameGraphicsView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ToolBarButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraManager.h">
@@ -54,5 +60,52 @@
     <QtMoc Include="FrameGraphicsView.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ToolBarButton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AnimationMenu.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu1.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="StyleSheets\StyleSheet.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Menu2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Menu3.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Menu4.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Select1.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Select2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Select3.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Select4.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Pen1.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Pen2.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Pen3.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Images\Pen4.svg">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

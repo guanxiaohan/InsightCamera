@@ -61,9 +61,21 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <LibraryPath>D:\Qt\6.2.2\msvc2019_64\lib;$(WindowsSDK_LibraryPath_x64);$(VC_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -89,6 +101,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationMenu.cpp" />
+    <ClCompile Include="ToolBarButton.cpp" />
     <QtRcc Include="MainInterface.qrc" />
     <QtUic Include="MainInterface.ui" />
     <QtMoc Include="MainInterface.h" />
@@ -102,6 +116,27 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="FrameGraphicsView.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Menu1.svg" />
+    <None Include="Images\Menu2.svg" />
+    <None Include="Images\Menu3.svg" />
+    <None Include="Images\Menu4.svg" />
+    <None Include="Images\Pen1.svg" />
+    <None Include="Images\Pen2.svg" />
+    <None Include="Images\Pen3.svg" />
+    <None Include="Images\Pen4.svg" />
+    <None Include="Images\Select1.svg" />
+    <None Include="Images\Select2.svg" />
+    <None Include="Images\Select3.svg" />
+    <None Include="Images\Select4.svg" />
+    <None Include="StyleSheets\StyleSheet.qss" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="ToolBarButton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="AnimationMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

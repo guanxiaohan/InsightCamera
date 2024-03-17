@@ -15,14 +15,14 @@ public:
 	CameraManager(QObject *parent = nullptr);
 	~CameraManager();
 	bool checkCameraAvailablity();
-	inline const QList<QCameraDevice> getAvailableCameras();
-	inline void setCamera(QCameraDevice device);
+	const QList<QCameraDevice> getAvailableCameras();
+	void setCamera(QCameraDevice device);
 	bool setCamera(QString cameraName);
 	bool isAvailable() const { return outputAvailable; };
 	QCamera* camera() { return inputCamera; };
 
 private:
 	bool outputAvailable = false;
-	QCamera* inputCamera;
+	QCamera* inputCamera = nullptr;
 	
 };
