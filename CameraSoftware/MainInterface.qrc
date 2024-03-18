@@ -13,5 +13,9 @@
         <file alias="PenIcon2">Images/Pen2.svg</file>
         <file alias="PenIcon3">Images/Pen3.svg</file>
         <file alias="PenIcon4">Images/Pen4.svg</file>
+        <file alias="EraserIcon1">Images/Eraser1.svg</file>
+        <file alias="EraserIcon2">Images/Eraser2.svg</file>
+        <file alias="EraserIcon3">Images/Eraser3.svg</file>
+        <file alias="EraserIcon4">Images/Eraser4.svg</file>
     </qresource>
 </RCC>

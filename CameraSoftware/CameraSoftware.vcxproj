@@ -118,18 +118,6 @@
     <QtMoc Include="FrameGraphicsView.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\Menu1.svg" />
-    <None Include="Images\Menu2.svg" />
-    <None Include="Images\Menu3.svg" />
-    <None Include="Images\Menu4.svg" />
-    <None Include="Images\Pen1.svg" />
-    <None Include="Images\Pen2.svg" />
-    <None Include="Images\Pen3.svg" />
-    <None Include="Images\Pen4.svg" />
-    <None Include="Images\Select1.svg" />
-    <None Include="Images\Select2.svg" />
-    <None Include="Images\Select3.svg" />
-    <None Include="Images\Select4.svg" />
     <None Include="StyleSheets\StyleSheet.qss" />
   </ItemGroup>
   <ItemGroup>

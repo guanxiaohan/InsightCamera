@@ -74,6 +74,20 @@ void ToolBarButton::setCheckState(bool check)
 	}
 }
 
+void ToolBarButton::setIconState(IconState iconstate)
+{
+	switch (iconstate) {
+	case Normal:
+		setIcon(iconNormal);
+	case Hover:
+		setIcon(iconHover);
+	case Checked:
+		setIcon(iconChecked);
+	case CheckHover:
+		setIcon(iconCheckHover);
+	}
+}
+
 void ToolBarButton::iconChange()
 {
 

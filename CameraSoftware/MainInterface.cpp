@@ -15,6 +15,7 @@ MainInterface::MainInterface(QWidget* parent)
 	MenuButton = new ToolBarButton(this, "Menu", "Menu");
 	SelectButton = new ToolBarButton(this, "Select", "Select");
 	PenButton = new ToolBarButton(this, "Pen", "Pen");
+	EraserButton = new ToolBarButton(this, "Eraser", "Eraser");
 	
 	MenuButton->installEventFilter(this);
 	connect(MenuButton, &ToolBarButton::buttonPressed, this, &MainInterface::MenuButtonClicked);
@@ -28,6 +29,10 @@ MainInterface::MainInterface(QWidget* parent)
 	connect(PenButton, &ToolBarButton::buttonPressed, this, &MainInterface::PenButtonClicked);
 	connect(this, &MainInterface::ToolBarButtonHover, PenButton, &ToolBarButton::hoverEnter);
 	connect(this, &MainInterface::ToolBarButtonLeave, PenButton, &ToolBarButton::hoverLeave);
+	EraserButton->installEventFilter(this);
+	connect(EraserButton, &ToolBarButton::buttonPressed, this, &MainInterface::EraserButtonClicked);
+	connect(this, &MainInterface::ToolBarButtonHover, EraserButton, &ToolBarButton::hoverEnter);
+	connect(this, &MainInterface::ToolBarButtonLeave, EraserButton, &ToolBarButton::hoverLeave);
 
 	SelectButton->setCheckState(true);
 	PenButton->setCheckState(false);
@@ -38,16 +43,17 @@ MainInterface::MainInterface(QWidget* parent)
 		"background-color: rgba(255, 255, 255, 180);"
 		"border: 2px solid rgba(255, 255, 255, 200);"
 		"border-radius: 8px;"
-		"padding: 0px 6px 0px;"
+		"padding: 0px 5px 0px;"
 		"}");
 	ui->mainToolBar->setContentsMargins(0, 0, 0, 0);
 	ui->mainToolBar->setFloatable(true);
 	ui->mainToolBar->setMovable(false);
-	ui->mainToolBar->setGeometry(width() / 2 - 225, height() - 100, 450, 85);
+	ui->mainToolBar->setGeometry(width() / 2 - 200, height() - 84, 400, 76);
 	ui->mainToolBar->addWidget(MenuButton);
 	ui->mainToolBar->addSeparator();
 	ui->mainToolBar->addWidget(SelectButton);
 	ui->mainToolBar->addWidget(PenButton);
+	ui->mainToolBar->addWidget(EraserButton);
 	ui->mainToolBar->show();
 
 	updateTimer = new QTimer();
@@ -130,6 +136,7 @@ void MainInterface::ResetToolButtons()
 {
 	SelectButton->setCheckState(false);
 	PenButton->setCheckState(false);
+	EraserButton->setCheckState(false);
 }
 
 void MainInterface::MenuButtonClicked()
@@ -146,6 +153,7 @@ void MainInterface::SelectButtonClicked()
 {
 	ResetToolButtons();
 	SelectButton->setCheckState(true);
+	SelectButton->setIconState(ToolBarButton::CheckHover);
 	nowTool = Select;
 	ui->CameraFrame->setFrameDraggable(true);
 }
@@ -154,7 +162,17 @@ void MainInterface::PenButtonClicked()
 {
 	ResetToolButtons();
 	PenButton->setCheckState(true);
+	PenButton->setIconState(ToolBarButton::CheckHover);
 	nowTool = Pen;
+	ui->CameraFrame->setFrameDraggable(false);
+}
+
+void MainInterface::EraserButtonClicked()
+{
+	ResetToolButtons();
+	EraserButton->setCheckState(true);
+	EraserButton->setIconState(ToolBarButton::CheckHover);
+	nowTool = Eraser;
 	ui->CameraFrame->setFrameDraggable(false);
 }
 
@@ -176,6 +194,9 @@ bool MainInterface::eventFilter(QObject* obj, QEvent* event)
 		else if (obj == PenButton) {
 			emit ToolBarButtonHover(PenButton);
 		}
+		else if (obj == EraserButton) {
+			emit ToolBarButtonHover(EraserButton);
+		}
 	}
 	else if (event->type() == QEvent::HoverLeave){
 		if (obj == MenuButton) {
@@ -186,6 +207,9 @@ bool MainInterface::eventFilter(QObject* obj, QEvent* event)
 		}
 		else if (obj == PenButton) {
 			emit ToolBarButtonLeave(PenButton);
+		}
+		else if (obj == EraserButton) {
+			emit ToolBarButtonLeave(EraserButton);
 		}
 	}
 	return QWidget::eventFilter(obj, event);

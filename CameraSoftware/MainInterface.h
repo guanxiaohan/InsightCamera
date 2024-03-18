@@ -53,6 +53,7 @@ private:
     ToolBarButton* MenuButton;
     ToolBarButton* SelectButton;
     ToolBarButton* PenButton;
+    ToolBarButton* EraserButton;
     AnimationMenu* PopMenu;
 
     void updateCapture();
@@ -60,6 +61,7 @@ private:
     void MenuButtonClicked();
     void SelectButtonClicked();
     void PenButtonClicked();
+    void EraserButtonClicked();
 
 protected:
     void resizeEvent(QResizeEvent *event);
