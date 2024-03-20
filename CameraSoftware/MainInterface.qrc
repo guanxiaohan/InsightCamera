@@ -17,5 +17,21 @@
         <file alias="EraserIcon2">Images/Eraser2.svg</file>
         <file alias="EraserIcon3">Images/Eraser3.svg</file>
         <file alias="EraserIcon4">Images/Eraser4.svg</file>
+        <file alias="UndoIcon1">Images/Undo1.svg</file>
+        <file alias="UndoIcon2">Images/Undo2.svg</file>
+        <file alias="UndoIcon3">Images/Undo3.svg</file>
+        <file alias="UndoIcon4">Images/Undo4.svg</file>
+        <file alias="CaptureIcon1">Images/Capture1.svg</file>
+        <file alias="CaptureIcon2">Images/Capture2.svg</file>
+        <file alias="CaptureIcon3">Images/Capture3.svg</file>
+        <file alias="CaptureIcon4">Images/Capture4.svg</file>
+        <file alias="SaveIcon1">Images/Save1.svg</file>
+        <file alias="SaveIcon2">Images/Save2.svg</file>
+        <file alias="SaveIcon3">Images/Save3.svg</file>
+        <file alias="SaveIcon4">Images/Save4.svg</file>
+        <file alias="LeftArrowIcon1">Images/LeftArrow1.svg</file>
+        <file alias="LeftArrowIcon2">Images/LeftArrow2.svg</file>
+        <file alias="LeftArrowIcon3">Images/LeftArrow3.svg</file>
+        <file alias="LeftArrowIcon4">Images/LeftArrow4.svg</file>
     </qresource>
 </RCC>

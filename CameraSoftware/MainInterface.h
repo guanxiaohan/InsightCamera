@@ -12,7 +12,10 @@
 #include <QtMultimedia/QCameraDevice>
 #include <QtMultimedia/QMediaDevices>
 #include <QtCore/QString>
+#include <QtCore/QPropertyAnimation>
+#include <QtCore/QEasingCurve>
 #include <QtCore/QTimer>
+#include <QtCore/QSharedPointer>
 #include <QtGui/QAction>
 #include <QtGui/QIcon>
 #include <QGraphicsVideoItem>
@@ -49,12 +52,18 @@ private:
     QTimer* updateTimer;
     Tools nowTool = Select;
     bool menuShowing = false;
+    QList<QPixmap*> capturesCache;
 
     ToolBarButton* MenuButton;
     ToolBarButton* SelectButton;
     ToolBarButton* PenButton;
     ToolBarButton* EraserButton;
-    AnimationMenu* PopMenu;
+    ToolBarButton* UndoButton;
+    ToolBarButton* CaptureButton;
+    QToolButton* RightWidgetButton;
+    QSharedPointer<AnimationMenu> PopMenu;
+
+    QSharedPointer<QPropertyAnimation> toolBarPosAnimation;
 
     void updateCapture();
     void ResetToolButtons();
@@ -62,6 +71,8 @@ private:
     void SelectButtonClicked();
     void PenButtonClicked();
     void EraserButtonClicked();
+    void UndoButtonClicked();
+    void CaptureButtonClicked();
 
 protected:
     void resizeEvent(QResizeEvent *event);

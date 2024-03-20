@@ -13,18 +13,24 @@ ToolBarButton::ToolBarButton(QWidget *parent, QString iconid, QString text)
 	setIcon(iconNormal);
 	setStyleSheet("QToolButton{"
 		"font-size: 16px;"
-		"color: #444444;"
+		"color: #424242;"
 		"border: 0;"
-		"margin: 0;"
+		"margin: 0 0;"
 		"}"
 		"QToolButton:hover{"
 		"background-color: rgba(0, 0, 0, 0);"
+		"color: #666666;"
 		"}"
 		"QToolButton:pressed{"
 		"padding: 0px;"
 		"}"
 		"QToolButton:checked{"
 		"padding: 0px;"
+		"color: #00AC55;"
+		"}"
+		"QToolButton:checked:hover{"
+		"padding: 0px;"
+		"color: #00BB55;"
 		"}");
 	setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	setToolTip(text);
@@ -65,6 +71,8 @@ void ToolBarButton::hoverLeave(ToolBarButton* iconObj)
 
 void ToolBarButton::setCheckState(bool check)
 {
+	if (not isCheckable()) 
+		return;
 	setChecked(check);
 	if (check) {
 		setIcon(iconChecked);
@@ -79,12 +87,16 @@ void ToolBarButton::setIconState(IconState iconstate)
 	switch (iconstate) {
 	case Normal:
 		setIcon(iconNormal);
+		break;
 	case Hover:
 		setIcon(iconHover);
+		break;
 	case Checked:
 		setIcon(iconChecked);
+		break;
 	case CheckHover:
 		setIcon(iconCheckHover);
+		break;
 	}
 }
 
@@ -95,7 +107,31 @@ void ToolBarButton::iconChange()
 
 void ToolBarButton::onClicked()
 {
-	setChecked(true);
-	setIcon(iconCheckHover);
-	emit buttonPressed();
+	emit buttonClicked();
+}
+
+void ToolBarButton::onToggledTo()
+{
+	emit buttonToggledTo();
+}
+
+void ToolBarButton::mousePressEvent(QMouseEvent* event)
+{
+	if (not isCheckable())
+		setIcon(iconCheckHover);
+	else {
+		setCheckState(true);
+		setIconState(CheckHover);
+		onToggledTo();
+	}
+}
+
+void ToolBarButton::mouseReleaseEvent(QMouseEvent* event)
+{
+	if (not isCheckable()) {
+		setIcon(iconHover);
+		if (geometry().contains(event->pos())) {
+			onClicked();
+		}
+	}
 }

@@ -52,6 +52,9 @@
     <ClCompile Include="AnimationMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CapturesList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraManager.h">
@@ -66,10 +69,18 @@
     <QtMoc Include="AnimationMenu.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="CapturesList.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <None Include="StyleSheets\StyleSheet.qss">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="CapturesList.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

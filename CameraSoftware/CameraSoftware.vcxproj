@@ -102,8 +102,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationMenu.cpp" />
+    <ClCompile Include="CapturesList.cpp" />
     <ClCompile Include="ToolBarButton.cpp" />
     <QtRcc Include="MainInterface.qrc" />
+    <QtUic Include="CapturesList.ui" />
     <QtUic Include="MainInterface.ui" />
     <QtMoc Include="MainInterface.h" />
     <ClCompile Include="CameraManager.cpp" />
@@ -125,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AnimationMenu.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="CapturesList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -16,26 +16,70 @@ MainInterface::MainInterface(QWidget* parent)
 	SelectButton = new ToolBarButton(this, "Select", "Select");
 	PenButton = new ToolBarButton(this, "Pen", "Pen");
 	EraserButton = new ToolBarButton(this, "Eraser", "Eraser");
+	UndoButton = new ToolBarButton(this, "Undo", "Undo");
+	CaptureButton = new ToolBarButton(this, "Capture", "Cptr.");
 	
 	MenuButton->installEventFilter(this);
-	connect(MenuButton, &ToolBarButton::buttonPressed, this, &MainInterface::MenuButtonClicked);
+	connect(MenuButton, &ToolBarButton::buttonToggledTo, this, &MainInterface::MenuButtonClicked);
 	connect(this, &MainInterface::ToolBarButtonHover, MenuButton, &ToolBarButton::hoverEnter);
 	connect(this, &MainInterface::ToolBarButtonLeave, MenuButton, &ToolBarButton::hoverLeave);
 	SelectButton->installEventFilter(this);
-	connect(SelectButton, &ToolBarButton::buttonPressed, this, &MainInterface::SelectButtonClicked);
+	connect(SelectButton, &ToolBarButton::buttonToggledTo, this, &MainInterface::SelectButtonClicked);
 	connect(this, &MainInterface::ToolBarButtonHover, SelectButton, &ToolBarButton::hoverEnter);
 	connect(this, &MainInterface::ToolBarButtonLeave, SelectButton, &ToolBarButton::hoverLeave);
 	PenButton->installEventFilter(this);
-	connect(PenButton, &ToolBarButton::buttonPressed, this, &MainInterface::PenButtonClicked);
+	connect(PenButton, &ToolBarButton::buttonToggledTo, this, &MainInterface::PenButtonClicked);
 	connect(this, &MainInterface::ToolBarButtonHover, PenButton, &ToolBarButton::hoverEnter);
 	connect(this, &MainInterface::ToolBarButtonLeave, PenButton, &ToolBarButton::hoverLeave);
 	EraserButton->installEventFilter(this);
-	connect(EraserButton, &ToolBarButton::buttonPressed, this, &MainInterface::EraserButtonClicked);
+	connect(EraserButton, &ToolBarButton::buttonToggledTo, this, &MainInterface::EraserButtonClicked);
 	connect(this, &MainInterface::ToolBarButtonHover, EraserButton, &ToolBarButton::hoverEnter);
 	connect(this, &MainInterface::ToolBarButtonLeave, EraserButton, &ToolBarButton::hoverLeave);
+	UndoButton->installEventFilter(this);
+	connect(UndoButton, &ToolBarButton::buttonClicked, this, &MainInterface::UndoButtonClicked);
+	connect(this, &MainInterface::ToolBarButtonHover, UndoButton, &ToolBarButton::hoverEnter);
+	connect(this, &MainInterface::ToolBarButtonLeave, UndoButton, &ToolBarButton::hoverLeave);
+	CaptureButton->installEventFilter(this);
+	connect(CaptureButton, &ToolBarButton::buttonClicked, this, &MainInterface::CaptureButtonClicked);
+	connect(this, &MainInterface::ToolBarButtonHover, CaptureButton, &ToolBarButton::hoverEnter);
+	connect(this, &MainInterface::ToolBarButtonLeave, CaptureButton, &ToolBarButton::hoverLeave);
 
 	SelectButton->setCheckState(true);
 	PenButton->setCheckState(false);
+	EraserButton->setCheckState(false);
+	UndoButton->setCheckable(false);
+	CaptureButton->setCheckable(false);
+
+	RightWidgetButton = new QToolButton(this);
+	RightWidgetButton->setProperty("toLeft", true);
+	RightWidgetButton->setStyleSheet("QToolButton[toLeft=true]{"
+		"image: url(:/MainInterface/LeftArrowIcon1);"
+		"background-color: rgba(190, 190, 190, 140);"
+		"border-radius: 10px;"
+		"}"
+		"QToolButton:hover[toLeft=true]{"
+		"image: url(:/MainInterface/LeftArrowIcon2);"
+		"background-color: rgba(230, 230, 230, 140);"
+		"}"
+		"QToolButton:pressed[toLeft=true]{"
+		"image: url(:/MainInterface/LeftArrowIcon4);"
+		"background-color: rgba(230, 230, 230, 160);"
+		"}"
+		"QToolButton[toLeft=false]{"
+		"image: url(:/MainInterface/LeftRightIcon1);"
+		"background-color: rgba(190, 190, 190, 140);"
+		"border-radius: 10px;"
+		"}"
+		"QToolButton:hover[toLeft=false]{"
+		"image: url(:/MainInterface/LeftRightIcon2);"
+		"background-color: rgba(230, 230, 230, 140);"
+		"}"
+		"QToolButton:pressed[toLeft=false]{"
+		"image: url(:/MainInterface/LeftRightIcon4);"
+		"background-color: rgba(230, 230, 230, 160);"
+		"}"
+	);
+	RightWidgetButton->setGeometry(QRect(width() - 36, height() / 2 - 45, 32, 90));
 
 	ui->mainToolBar->setParent(this);
 	removeToolBar(ui->mainToolBar);
@@ -48,12 +92,14 @@ MainInterface::MainInterface(QWidget* parent)
 	ui->mainToolBar->setContentsMargins(0, 0, 0, 0);
 	ui->mainToolBar->setFloatable(true);
 	ui->mainToolBar->setMovable(false);
-	ui->mainToolBar->setGeometry(width() / 2 - 200, height() - 84, 400, 76);
 	ui->mainToolBar->addWidget(MenuButton);
 	ui->mainToolBar->addSeparator();
 	ui->mainToolBar->addWidget(SelectButton);
 	ui->mainToolBar->addWidget(PenButton);
 	ui->mainToolBar->addWidget(EraserButton);
+	ui->mainToolBar->addWidget(UndoButton);
+	ui->mainToolBar->addSeparator();
+	ui->mainToolBar->addWidget(CaptureButton);
 	ui->mainToolBar->show();
 
 	updateTimer = new QTimer();
@@ -69,9 +115,17 @@ MainInterface::MainInterface(QWidget* parent)
 	ui->CameraFrame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	ui->statusBar->hide();
 
+	toolBarPosAnimation = QSharedPointer<QPropertyAnimation>(new QPropertyAnimation(ui->mainToolBar, "geometry"));
+	toolBarPosAnimation->setStartValue(QRect(width() / 2, height() - 84, 10, 76));
+	toolBarPosAnimation->setEndValue(QRect(width() / 2 - 187, height() - 84, 374, 76));
+	toolBarPosAnimation->setEasingCurve(QEasingCurve::OutQuart);
+	toolBarPosAnimation->setDuration(670);
+	toolBarPosAnimation->start();
+
 	setCentralWidget(ui->CameraFrame);
 	ui->CameraFrame->resetViewPort(width() * 2, height() * 2);
 	ui->mainToolBar->raise();
+	RightWidgetButton->raise();
 }
 
 MainInterface::~MainInterface()
@@ -83,9 +137,11 @@ MainInterface::~MainInterface()
 	delete updateTimer;
 	delete MenuButton;
 	delete SelectButton;
-	if (menuShowing) {
-		delete PopMenu;
-	}
+	delete PenButton;
+	delete EraserButton;
+	delete UndoButton;
+	delete CaptureButton;
+	delete RightWidgetButton;
 	delete ui;
 }
 
@@ -121,6 +177,9 @@ void MainInterface::operationMenuReturn(int index)
 		QMessageBox::information(this, "About", "Nothing here.");
 		break;
 	case 1:
+		showMinimized();
+		break;
+	case 2:
 		exit(0);
 		break;
 	}
@@ -141,10 +200,11 @@ void MainInterface::ResetToolButtons()
 
 void MainInterface::MenuButtonClicked()
 {
-	PopMenu = new AnimationMenu(this);
+	PopMenu = QSharedPointer<AnimationMenu>(new AnimationMenu(this));
 	PopMenu->addMenuItem("About", "About");
+	PopMenu->addMenuItem("Minimize", "Minimize");
 	PopMenu->addMenuItem("Exit", "Exit");
-	connect(PopMenu, &AnimationMenu::returnAction, this, &MainInterface::operationMenuReturn);
+	connect(PopMenu.data(), &AnimationMenu::returnAction, this, &MainInterface::operationMenuReturn);
 	menuShowing = true;
 	PopMenu->exec(QPoint(ui->mainToolBar->x(), ui->mainToolBar->y() - PopMenu->getHeight() - 10));
 }
@@ -176,6 +236,14 @@ void MainInterface::EraserButtonClicked()
 	ui->CameraFrame->setFrameDraggable(false);
 }
 
+void MainInterface::UndoButtonClicked()
+{
+}
+
+void MainInterface::CaptureButtonClicked()
+{
+}
+
 void MainInterface::resizeEvent(QResizeEvent* event) {
 	auto windowSize = size();
 	videoItem->setSize(windowSize);
@@ -197,6 +265,12 @@ bool MainInterface::eventFilter(QObject* obj, QEvent* event)
 		else if (obj == EraserButton) {
 			emit ToolBarButtonHover(EraserButton);
 		}
+		else if (obj == UndoButton) {
+			emit ToolBarButtonHover(UndoButton);
+		}
+		else if (obj == CaptureButton) {
+			emit ToolBarButtonHover(CaptureButton);
+		}
 	}
 	else if (event->type() == QEvent::HoverLeave){
 		if (obj == MenuButton) {
@@ -210,6 +284,12 @@ bool MainInterface::eventFilter(QObject* obj, QEvent* event)
 		}
 		else if (obj == EraserButton) {
 			emit ToolBarButtonLeave(EraserButton);
+		}
+		else if (obj == UndoButton) {
+			emit ToolBarButtonLeave(UndoButton);
+		}
+		else if (obj == CaptureButton) {
+			emit ToolBarButtonLeave(CaptureButton);
 		}
 	}
 	return QWidget::eventFilter(obj, event);

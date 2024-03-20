@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QToolButton>
+#include <QMouseEvent>
 #include <QObject>
 #include <QString>
 
@@ -28,7 +29,13 @@ private:
 
 	void iconChange();
 	void onClicked();
+	void onToggledTo();
+
+protected:
+	void mousePressEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
 
 signals:
-	void buttonPressed();
+	void buttonClicked();
+	void buttonToggledTo();
 };
