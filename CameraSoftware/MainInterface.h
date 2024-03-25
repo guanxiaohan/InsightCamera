@@ -11,11 +11,14 @@
 #include <QtMultimedia/QCamera>
 #include <QtMultimedia/QCameraDevice>
 #include <QtMultimedia/QMediaDevices>
+#include <QtMultimedia/QImageCapture>
+#include <QtMultimedia/QVideoSink>
 #include <QtCore/QString>
 #include <QtCore/QPropertyAnimation>
 #include <QtCore/QEasingCurve>
 #include <QtCore/QTimer>
 #include <QtCore/QSharedPointer>
+#include <QtCore/QScopedPointer>
 #include <QtGui/QAction>
 #include <QtGui/QIcon>
 #include <QGraphicsVideoItem>
@@ -27,6 +30,10 @@
 #include "FrameGraphicsView.h"
 #include "ToolBarButton.h"
 #include "AnimationMenu.h"
+#include "UnderToolBar.h"
+#include "CapturesList.h"
+#include "CapturedNotify.h"
+#include "BottomVideoGraphicsItem.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainInterfaceClass; };
@@ -41,18 +48,23 @@ public:
     ~MainInterface();
     void initailizeCamera();
     void operationMenuReturn(int);
+    void changeAboveSceneIndex(int);
+    void changeBelowSceneIndex(int);
     enum Tools{Null, Select, Pen, Eraser};
 
 private:
     Ui::MainInterfaceClass *ui;
     CameraManager *cameraManager;
     QGraphicsScene *mainScene;
-    QGraphicsVideoItem* videoItem;
+    BottomVideoGraphicsItem* videoItem;
     QMediaCaptureSession* captureSession;
+    QImageCapture imageCapture;
     QTimer* updateTimer;
     Tools nowTool = Select;
     bool menuShowing = false;
-    QList<QPixmap*> capturesCache;
+    int SideBarShowing = 0;
+    QImage realtimeCapture;
+    QList<QGraphicsScene*> captureScenes;
 
     ToolBarButton* MenuButton;
     ToolBarButton* SelectButton;
@@ -61,11 +73,18 @@ private:
     ToolBarButton* UndoButton;
     ToolBarButton* CaptureButton;
     QToolButton* RightWidgetButton;
+    UnderToolBar* ToolBar;
+    CapturesList* CapturesWidget;
     QSharedPointer<AnimationMenu> PopMenu;
+    QSharedPointer<CapturedNotify> CapturePopNotify;
 
-    QSharedPointer<QPropertyAnimation> toolBarPosAnimation;
+    QSharedPointer<QPropertyAnimation> RightButtonAnimation;
+    QSharedPointer<QPropertyAnimation> CapturesWidgetAnimation;
 
+    void switchRightSideBar();
     void updateCapture();
+    void captureReturned(int, QImage);
+    void captureNotifyClicked(int);
     void ResetToolButtons();
     void MenuButtonClicked();
     void SelectButtonClicked();
@@ -73,6 +92,7 @@ private:
     void EraserButtonClicked();
     void UndoButtonClicked();
     void CaptureButtonClicked();
+    void RightWidgetButtonClicked();
 
 protected:
     void resizeEvent(QResizeEvent *event);

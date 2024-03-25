@@ -20,6 +20,7 @@ public:
 	bool setCamera(QString cameraName);
 	bool isAvailable() const { return outputAvailable; };
 	QCamera* camera() { return inputCamera; };
+	QSize getMaxResolution();
 
 private:
 	bool outputAvailable = false;

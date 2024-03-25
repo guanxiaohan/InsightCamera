@@ -12,30 +12,62 @@ ToolBarButton::ToolBarButton(QWidget *parent, QString iconid, QString text)
 	setText(text);
 	setIcon(iconNormal);
 	setStyleSheet("QToolButton{"
-		"font-size: 16px;"
+		"font-size: 17px;"
 		"color: #424242;"
 		"border: 0;"
 		"margin: 0 0;"
+		"padding: 5px 0;"
 		"}"
 		"QToolButton:hover{"
 		"background-color: rgba(0, 0, 0, 0);"
 		"color: #666666;"
 		"}"
 		"QToolButton:pressed{"
-		"padding: 0px;"
+		"padding: 5px 0;"
 		"}"
 		"QToolButton:checked{"
-		"padding: 0px;"
+		"padding: 5px 0;"
 		"color: #00AC55;"
 		"}"
 		"QToolButton:checked:hover{"
-		"padding: 0px;"
+		"padding: 5px 0;"
 		"color: #00BB55;"
 		"}");
 	setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 	setToolTip(text);
 	setCheckable(true);
 	setObjectName(iconid + "Button");
+
+	connect(this, &QToolButton::clicked, this, &ToolBarButton::onClicked);
+}
+
+ToolBarButton::ToolBarButton(QWidget* parent)
+{
+	setStyleSheet("QToolButton{"
+		"font-size: 14px;"
+		"color: #424242;"
+		"border: 0;"
+		"margin: 0 0;"
+		"padding: 5px 0;"
+		"}"
+		"QToolButton:hover{"
+		"background-color: rgba(0, 0, 0, 0);"
+		"color: #666666;"
+		"}"
+		"QToolButton:pressed{"
+		"padding: 5px 0;"
+		"}"
+		"QToolButton:checked{"
+		"padding: 5px 0;"
+		"color: #00AC55;"
+		"}"
+		"QToolButton:checked:hover{"
+		"padding: 5px 0;"
+		"color: #00BB55;"
+		"}");
+	setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	setObjectName("ToolBarButton");
+	setCheckable(false);
 
 	connect(this, &QToolButton::clicked, this, &ToolBarButton::onClicked);
 }
@@ -47,7 +79,7 @@ ToolBarButton::~ToolBarButton()
 
 void ToolBarButton::hoverEnter(ToolBarButton* iconObj)
 {
-	if (iconObj == this) {
+	if (iconObj == this or iconObj == nullptr) {
 		if (isChecked()) {
 			setIcon(iconCheckHover);
 		}
@@ -59,7 +91,7 @@ void ToolBarButton::hoverEnter(ToolBarButton* iconObj)
 
 void ToolBarButton::hoverLeave(ToolBarButton* iconObj)
 {
-	if (iconObj == this) {
+	if (iconObj == this or iconObj == nullptr) {
 		if (isChecked()) {
 			setIcon(iconChecked);
 		}
@@ -100,6 +132,17 @@ void ToolBarButton::setIconState(IconState iconstate)
 	}
 }
 
+void ToolBarButton::setIconid(QString iconid)
+{
+	iconNormal = QIcon(":/MainInterface/" + iconid + "Icon1");
+	iconHover = QIcon(":/MainInterface/" + iconid + "Icon2");
+	iconChecked = QIcon(":/MainInterface/" + iconid + "Icon3");
+	iconCheckHover = QIcon(":/MainInterface/" + iconid + "Icon4");
+	iconId = iconid;
+	setIcon(iconNormal);
+	setObjectName(iconid + "Button");
+}
+
 void ToolBarButton::iconChange()
 {
 
@@ -130,7 +173,8 @@ void ToolBarButton::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (not isCheckable()) {
 		setIcon(iconHover);
-		if (geometry().contains(event->pos())) {
+		auto g = geometry();
+		if (event->pos().x() > 0 && event->pos().y() > 0 && event->pos().x() < g.width() && event->pos().y() < g.height()) {
 			onClicked();
 		}
 	}

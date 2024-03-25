@@ -7,7 +7,7 @@ MainInterface::MainInterface(QWidget* parent)
 	ui->setupUi(this);
 
 	cameraManager = new CameraManager(this);
-	videoItem = new QGraphicsVideoItem();
+	videoItem = new BottomVideoGraphicsItem(this);
 	captureSession = new QMediaCaptureSession();
 
 	setWindowState(Qt::WindowFullScreen);
@@ -51,59 +51,64 @@ MainInterface::MainInterface(QWidget* parent)
 	CaptureButton->setCheckable(false);
 
 	RightWidgetButton = new QToolButton(this);
-	RightWidgetButton->setProperty("toLeft", true);
-	RightWidgetButton->setStyleSheet("QToolButton[toLeft=true]{"
+	RightWidgetButton->setProperty("toLeft", 1);
+	RightWidgetButton->setStyleSheet(
+		"QToolButton{"
 		"image: url(:/MainInterface/LeftArrowIcon1);"
 		"background-color: rgba(190, 190, 190, 140);"
 		"border-radius: 10px;"
 		"}"
-		"QToolButton:hover[toLeft=true]{"
+		"QToolButton:hover{"
 		"image: url(:/MainInterface/LeftArrowIcon2);"
 		"background-color: rgba(230, 230, 230, 140);"
 		"}"
-		"QToolButton:pressed[toLeft=true]{"
+		"QToolButton:pressed{"
 		"image: url(:/MainInterface/LeftArrowIcon4);"
 		"background-color: rgba(230, 230, 230, 160);"
 		"}"
-		"QToolButton[toLeft=false]{"
-		"image: url(:/MainInterface/LeftRightIcon1);"
+		"QToolButton[toLeft='2']{"
+		"image: url(:/MainInterface/RightArrowIcon1);"
 		"background-color: rgba(190, 190, 190, 140);"
 		"border-radius: 10px;"
 		"}"
-		"QToolButton:hover[toLeft=false]{"
-		"image: url(:/MainInterface/LeftRightIcon2);"
+		"QToolButton:hover[toLeft='2']{"
+		"image: url(:/MainInterface/RightArrowIcon2);"
 		"background-color: rgba(230, 230, 230, 140);"
 		"}"
-		"QToolButton:pressed[toLeft=false]{"
-		"image: url(:/MainInterface/LeftRightIcon4);"
+		"QToolButton:pressed[toLeft='2']{"
+		"image: url(:/MainInterface/RightArrowIcon4);"
 		"background-color: rgba(230, 230, 230, 160);"
 		"}"
 	);
 	RightWidgetButton->setGeometry(QRect(width() - 36, height() / 2 - 45, 32, 90));
+	connect(RightWidgetButton, &QToolButton::clicked, this, &MainInterface::RightWidgetButtonClicked);
 
-	ui->mainToolBar->setParent(this);
 	removeToolBar(ui->mainToolBar);
-	ui->mainToolBar->setStyleSheet("QToolBar#mainToolBar {"
-		"background-color: rgba(255, 255, 255, 180);"
-		"border: 2px solid rgba(255, 255, 255, 200);"
-		"border-radius: 8px;"
-		"padding: 0px 5px 0px;"
-		"}");
-	ui->mainToolBar->setContentsMargins(0, 0, 0, 0);
-	ui->mainToolBar->setFloatable(true);
-	ui->mainToolBar->setMovable(false);
-	ui->mainToolBar->addWidget(MenuButton);
-	ui->mainToolBar->addSeparator();
-	ui->mainToolBar->addWidget(SelectButton);
-	ui->mainToolBar->addWidget(PenButton);
-	ui->mainToolBar->addWidget(EraserButton);
-	ui->mainToolBar->addWidget(UndoButton);
-	ui->mainToolBar->addSeparator();
-	ui->mainToolBar->addWidget(CaptureButton);
-	ui->mainToolBar->show();
+	ToolBar = new UnderToolBar(this);
+	ToolBar->addWidget(MenuButton);
+	ToolBar->addSeparator();
+	ToolBar->addWidget(SelectButton);
+	ToolBar->addWidget(PenButton);
+	ToolBar->addWidget(EraserButton);
+	ToolBar->addWidget(UndoButton);
+	ToolBar->addSeparator();
+	ToolBar->addWidget(CaptureButton);
+	ToolBar->moveAnimation->setStartValue(QRect(width() / 2, height() - 84, 10, 76));
+	ToolBar->moveAnimation->setEndValue(QRect(width() / 2 - ToolBar->getWidth() / 2 - ToolBarMargin, height() - 84, ToolBar->getWidth() + ToolBarMargin*2, 76));
+	ToolBar->moveAnimation->setEasingCurve(QEasingCurve::OutQuart);
+	ToolBar->moveAnimation->setDuration(680);
+	ToolBar->moveAnimation->start();
+
+	CapturesWidget = new CapturesList(this);
+	CapturesWidget->setGeometry(QRect(width() + 1, height() - CapturesListHeight, CapturesListWidth, CapturesListHeight));
+	CapturesWidget->AboveListWidget->addPixmap(QPixmap());
+	CapturesWidget->AboveListWidget->setSelectingIndex(0);
+	CapturesWidget->BelowListWidget->setProperty("idNeeded", true);
+	connect(CapturesWidget->AboveListWidget, &CaptureListWidget::indexChanged, this, &MainInterface::changeAboveSceneIndex);
+	connect(CapturesWidget->BelowListWidget, &CaptureListWidget::indexChanged, this, &MainInterface::changeBelowSceneIndex);
 
 	updateTimer = new QTimer();
-	updateTimer->setInterval(10);
+	updateTimer->setInterval(32);
 	connect(updateTimer, &QTimer::timeout, this, &MainInterface::updateCapture);
 	updateTimer->start();
 	initailizeCamera();
@@ -113,35 +118,41 @@ MainInterface::MainInterface(QWidget* parent)
 	ui->CameraFrame->setScene(mainScene);
 	ui->CameraFrame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	ui->CameraFrame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	ui->CameraFrame->bottomItem = videoItem;
 	ui->statusBar->hide();
-
-	toolBarPosAnimation = QSharedPointer<QPropertyAnimation>(new QPropertyAnimation(ui->mainToolBar, "geometry"));
-	toolBarPosAnimation->setStartValue(QRect(width() / 2, height() - 84, 10, 76));
-	toolBarPosAnimation->setEndValue(QRect(width() / 2 - 187, height() - 84, 374, 76));
-	toolBarPosAnimation->setEasingCurve(QEasingCurve::OutQuart);
-	toolBarPosAnimation->setDuration(670);
-	toolBarPosAnimation->start();
 
 	setCentralWidget(ui->CameraFrame);
 	ui->CameraFrame->resetViewPort(width() * 2, height() * 2);
-	ui->mainToolBar->raise();
+	ToolBar->raise();
 	RightWidgetButton->raise();
+	CapturesWidget->raise();
 }
 
 MainInterface::~MainInterface()
 {
-	delete videoItem;
 	delete captureSession;
 	delete cameraManager;
+	for (auto item : mainScene->items()) {
+		mainScene->removeItem(item);
+		delete item;
+	}
 	delete mainScene;
 	delete updateTimer;
-	delete MenuButton;
+	/*delete MenuButton;
 	delete SelectButton;
 	delete PenButton;
 	delete EraserButton;
 	delete UndoButton;
-	delete CaptureButton;
+	delete CaptureButton;*/
 	delete RightWidgetButton;
+	delete ToolBar;
+	for (auto i : captureScenes) {
+		for (auto item : i->items()) {
+			i->removeItem(item);
+			delete item;
+		}
+		delete i;
+	}
 	delete ui;
 }
 
@@ -152,19 +163,11 @@ void MainInterface::initailizeCamera()
 	}
 	if (cameraManager->isAvailable()) {
 		captureSession->setCamera(cameraManager->camera());
-		int maxIndex = 0;
-		int maxSize = 0;
-		int i = 0;
-		const QList<QSize> resolutions = cameraManager->camera()->cameraDevice().photoResolutions();
-		for (const QSize size : resolutions) {
-			int area = size.height() * size.width();
-			if (area > maxSize) {
-				maxSize = area;
-				maxIndex = i;
-			}
-			i++;
-		}
-		videoItem->setSize(resolutions[maxIndex]);
+		captureSession->setImageCapture(&imageCapture);
+		connect(&imageCapture, &QImageCapture::imageCaptured, this, &MainInterface::captureReturned);
+		auto Resolution = cameraManager->getMaxResolution();
+		videoItem->setSize(Resolution);
+		CapturesWidget->AboveListWidget->setFixedHeight(Resolution.height() / (Resolution.width() / 170) + 10);
 	}
 	captureSession->setVideoOutput(videoItem);
 }
@@ -185,10 +188,77 @@ void MainInterface::operationMenuReturn(int index)
 	}
 }
 
+void MainInterface::changeAboveSceneIndex(int)
+{
+	ui->CameraFrame->setScene(mainScene);
+	CapturesWidget->BelowListWidget->setSelectingIndex(-1);
+}
+
+void MainInterface::changeBelowSceneIndex(int index)
+{
+	ui->CameraFrame->setScene(captureScenes[index]);
+	CapturesWidget->AboveListWidget->setSelectingIndex(-1);
+}
+
+void MainInterface::switchRightSideBar()
+{
+	RightButtonAnimation = QSharedPointer<QPropertyAnimation>(new QPropertyAnimation(RightWidgetButton, "pos"));
+	CapturesWidgetAnimation = QSharedPointer<QPropertyAnimation>(new QPropertyAnimation(CapturesWidget, "pos"));
+	if (SideBarShowing == 0) {
+		SideBarShowing = 1;
+		RightWidgetButton->setProperty("toLeft", 2);
+		int startX = RightWidgetButton->x();
+		int endX = width() - CapturesListWidth - 4 - 32;
+		int startX2 = CapturesWidget->x();
+		int endX2 = width() - CapturesListWidth;
+		RightButtonAnimation->setEndValue(QPoint(endX, RightWidgetButton->y()));
+		RightButtonAnimation->setDuration((startX - endX) * 2.3);
+		RightButtonAnimation->setEasingCurve(QEasingCurve::OutQuint);
+		RightButtonAnimation->start();
+		CapturesWidgetAnimation->setStartValue(QPoint(startX2, CapturesWidget->y()));
+		CapturesWidgetAnimation->setEndValue(QPoint(endX2, CapturesWidget->y()));
+		CapturesWidgetAnimation->setDuration((startX2 - endX2) * 2.3);
+		CapturesWidgetAnimation->setEasingCurve(QEasingCurve::OutQuint);
+		CapturesWidgetAnimation->start();
+	}
+	else if (SideBarShowing == 1){
+		SideBarShowing = 0;
+		RightWidgetButton->setProperty("toLeft", 1);
+		int startX = RightWidgetButton->x();
+		int endX = width() - 4 - 32;
+		int startX2 = CapturesWidget->x();
+		int endX2 = width() + 1;
+		RightButtonAnimation->setStartValue(QPoint(startX, RightWidgetButton->y()));
+		RightButtonAnimation->setEndValue(QPoint(endX, RightWidgetButton->y()));
+		RightButtonAnimation->setDuration((endX - startX) * 2.3);
+		RightButtonAnimation->setEasingCurve(QEasingCurve::OutQuint);
+		RightButtonAnimation->start();
+		RightButtonAnimation->setStartValue(QPoint(startX, RightWidgetButton->y()));
+		CapturesWidgetAnimation->setStartValue(QPoint(startX2, CapturesWidget->y()));
+		CapturesWidgetAnimation->setEndValue(QPoint(endX2, CapturesWidget->y()));
+		CapturesWidgetAnimation->setDuration((endX2 - startX2) * 2.3);
+		CapturesWidgetAnimation->setEasingCurve(QEasingCurve::OutQuint);
+		CapturesWidgetAnimation->start();
+	}
+	RightWidgetButton->style()->polish(RightWidgetButton);
+}
+
 void MainInterface::updateCapture()
 {
-	if (cameraManager->isAvailable())
-		captureSession->imageCapture();
+	imageCapture.capture();
+}
+
+void MainInterface::captureReturned(int, QImage pix)
+{
+	CapturesWidget->AboveListWidget->updateCapture(0, pix);
+	realtimeCapture = pix;
+}
+
+void MainInterface::captureNotifyClicked(int index)
+{
+	changeBelowSceneIndex(index);
+	CapturesWidget->BelowListWidget->setSelectingIndex(index);
+	CapturesWidget->update();
 }
 
 void MainInterface::ResetToolButtons()
@@ -206,7 +276,7 @@ void MainInterface::MenuButtonClicked()
 	PopMenu->addMenuItem("Exit", "Exit");
 	connect(PopMenu.data(), &AnimationMenu::returnAction, this, &MainInterface::operationMenuReturn);
 	menuShowing = true;
-	PopMenu->exec(QPoint(ui->mainToolBar->x(), ui->mainToolBar->y() - PopMenu->getHeight() - 10));
+	PopMenu->exec(QPoint(ToolBar->x(),ToolBar->y() - PopMenu->getHeight() - 10));
 }
 
 void MainInterface::SelectButtonClicked()
@@ -215,7 +285,7 @@ void MainInterface::SelectButtonClicked()
 	SelectButton->setCheckState(true);
 	SelectButton->setIconState(ToolBarButton::CheckHover);
 	nowTool = Select;
-	ui->CameraFrame->setFrameDraggable(true);
+	ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FrameSelect);
 }
 
 void MainInterface::PenButtonClicked()
@@ -224,7 +294,7 @@ void MainInterface::PenButtonClicked()
 	PenButton->setCheckState(true);
 	PenButton->setIconState(ToolBarButton::CheckHover);
 	nowTool = Pen;
-	ui->CameraFrame->setFrameDraggable(false);
+	ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FramePen);
 }
 
 void MainInterface::EraserButtonClicked()
@@ -233,7 +303,7 @@ void MainInterface::EraserButtonClicked()
 	EraserButton->setCheckState(true);
 	EraserButton->setIconState(ToolBarButton::CheckHover);
 	nowTool = Eraser;
-	ui->CameraFrame->setFrameDraggable(false);
+	ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FrameEraser);
 }
 
 void MainInterface::UndoButtonClicked()
@@ -242,6 +312,34 @@ void MainInterface::UndoButtonClicked()
 
 void MainInterface::CaptureButtonClicked()
 {
+	auto scene = new QGraphicsScene();
+	auto item = new QGraphicsPixmapItem();
+	auto picture = QPixmap::fromImage(realtimeCapture);
+	picture = picture.scaled(width(), height(), Qt::KeepAspectRatio);
+	item->setPixmap(picture);
+	item->setPos(width() / 2, height() / 2);
+	scene->addItem(item);
+	scene->setSceneRect(0, 0, width()*2, height()*2);
+	captureScenes.append(scene);
+	CapturesWidget->BelowListWidget->addPixmap(picture);
+
+	if (SideBarShowing == 0) {
+		CapturePopNotify = QSharedPointer<CapturedNotify>(new CapturedNotify(picture, this, CapturesWidget->BelowListWidget->count() - 1));
+		CapturePopNotify->setGeometry(width() + 1, height() - CapturePopNotify->sizeHint().height() - 5, CapturedNotifyWidth, CapturePopNotify->sizeHint().height());
+		connect(CapturePopNotify.data(), &CapturedNotify::switchToPixmap, this, &MainInterface::captureNotifyClicked);
+		CapturePopNotify->installEventFilter(this);
+		CapturePopNotify->show();
+		CapturePopNotify->raise();
+		CapturePopNotify->appear();
+	}
+}
+
+void MainInterface::RightWidgetButtonClicked()
+{
+	if (not CapturePopNotify.isNull()) {
+		CapturePopNotify->tryDisappear();
+	}
+	switchRightSideBar();
 }
 
 void MainInterface::resizeEvent(QResizeEvent* event) {
@@ -290,6 +388,11 @@ bool MainInterface::eventFilter(QObject* obj, QEvent* event)
 		}
 		else if (obj == CaptureButton) {
 			emit ToolBarButtonLeave(CaptureButton);
+		}
+	}
+	if (obj == CapturePopNotify.data()) {
+		if (event->type() == QEvent::FocusOut) {
+			CapturePopNotify->noFocused();
 		}
 	}
 	return QWidget::eventFilter(obj, event);

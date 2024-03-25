@@ -33,5 +33,24 @@
         <file alias="LeftArrowIcon2">Images/LeftArrow2.svg</file>
         <file alias="LeftArrowIcon3">Images/LeftArrow3.svg</file>
         <file alias="LeftArrowIcon4">Images/LeftArrow4.svg</file>
+        <file alias="RightArrowIcon1">Images/RightArrow1.svg</file>
+        <file alias="RightArrowIcon2">Images/RightArrow2.svg</file>
+        <file alias="RightArrowIcon3">Images/RightArrow3.svg</file>
+        <file alias="RightArrowIcon4">Images/RightArrow4.svg</file>
+        <file alias="LoadIcon1">Images/Load1.svg</file>
+        <file alias="LoadIcon2">Images/Load2.svg</file>
+        <file alias="LoadIcon3">Images/Load3.svg</file>
+        <file alias="LoadIcon4">Images/Load4.svg</file>
+        <file alias="CompareIcon1">Images/Compare1.svg</file>
+        <file alias="CompareIcon2">Images/Compare2.svg</file>
+        <file alias="CompareIcon3">Images/Compare3.svg</file>
+        <file alias="CompareIcon4">Images/Compare4.svg</file>
+        <file alias="RemoveIcon1">Images/Remove1.svg</file>
+        <file alias="RemoveIcon2">Images/Remove2.svg</file>
+        <file alias="RemoveIcon3">Images/Remove3.svg</file>
+        <file alias="RemoveIcon4">Images/Remove4.svg</file>
+        <file alias="CheckedIcon">Images/Checked.svg</file>
+        <file alias="CrossIcon1">Images/Cross1.svg</file>
+        <file alias="CrossIcon2">Images/Cross2.svg</file>
     </qresource>
 </RCC>

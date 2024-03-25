@@ -55,6 +55,30 @@
     <ClCompile Include="CapturesList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UnderToolBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaptureListWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CapturedNotify.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PenGraphicsItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EraserGraphicsItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BottomVideoGraphicsItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BottomPixmapGraphicsItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EraserOptionsWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraManager.h">
@@ -72,6 +96,30 @@
     <QtMoc Include="CapturesList.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="UnderToolBar.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CaptureListWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CapturedNotify.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PenGraphicsItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="EraserGraphicsItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="BottomVideoGraphicsItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="BottomPixmapGraphicsItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="EraserOptionsWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <None Include="StyleSheets\StyleSheet.qss">
@@ -80,6 +128,12 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="CapturesList.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="CapturedNotify.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="EraserOptionsWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

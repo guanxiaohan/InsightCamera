@@ -85,7 +85,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
@@ -102,10 +102,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationMenu.cpp" />
+    <ClCompile Include="BottomPixmapGraphicsItem.cpp" />
+    <ClCompile Include="BottomVideoGraphicsItem.cpp" />
+    <ClCompile Include="CapturedNotify.cpp" />
+    <ClCompile Include="CaptureListWidget.cpp" />
     <ClCompile Include="CapturesList.cpp" />
+    <ClCompile Include="EraserGraphicsItem.cpp" />
+    <ClCompile Include="EraserOptionsWidget.cpp" />
+    <ClCompile Include="PenGraphicsItem.cpp" />
     <ClCompile Include="ToolBarButton.cpp" />
+    <ClCompile Include="UnderToolBar.cpp" />
     <QtRcc Include="MainInterface.qrc" />
+    <QtUic Include="CapturedNotify.ui" />
     <QtUic Include="CapturesList.ui" />
+    <QtUic Include="EraserOptionsWidget.ui" />
     <QtUic Include="MainInterface.ui" />
     <QtMoc Include="MainInterface.h" />
     <ClCompile Include="CameraManager.cpp" />
@@ -130,6 +140,30 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CapturesList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UnderToolBar.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="CaptureListWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="CapturedNotify.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="PenGraphicsItem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="EraserGraphicsItem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="BottomVideoGraphicsItem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="BottomPixmapGraphicsItem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="EraserOptionsWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

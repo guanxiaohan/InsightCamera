@@ -43,3 +43,20 @@ bool CameraManager::setCamera(QString cameraName)
 	return false;
 }
 
+QSize CameraManager::getMaxResolution()
+{
+	int maxIndex = 0;
+	int maxSize = 0;
+	int i = 0;
+	const QList<QSize> resolutions = camera()->cameraDevice().photoResolutions();
+	for (const QSize size : resolutions) {
+		int area = size.height() * size.width();
+		if (area > maxSize) {
+			maxSize = area;
+			maxIndex = i;
+		}
+		i++;
+	}
+	return resolutions[maxIndex];
+}
+

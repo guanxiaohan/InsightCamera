@@ -11,6 +11,7 @@ class ToolBarButton  : public QToolButton
 
 public:
 	ToolBarButton(QWidget *parent, QString iconid, QString text);
+	ToolBarButton(QWidget *parent);
 	~ToolBarButton();
 
 	enum IconState {Normal, Hover, Checked, CheckHover};
@@ -19,6 +20,7 @@ public:
 	void hoverLeave(ToolBarButton* iconObj);
 	void setCheckState(bool check);
 	void setIconState(IconState iconstate);
+	void setIconid(QString iconid);
 
 private:
 	QIcon iconNormal;

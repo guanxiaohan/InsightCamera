@@ -5,7 +5,7 @@ AnimationMenu::AnimationMenu(QWidget* parent)
 {
 	animation = new QPropertyAnimation(this, "geometry");
 	animation->setEasingCurve(QEasingCurve::OutQuart);
-	animation->setDuration(280);
+	animation->setDuration(350);
 	setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 	setAttribute(Qt::WA_TranslucentBackground);
 	setObjectName("AnimationMenu");
