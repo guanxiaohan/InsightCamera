@@ -37,6 +37,16 @@ void FrameGraphicsView::setEraserWidth(int width)
 {
 }
 
+void FrameGraphicsView::clearFrame()
+{
+    for (auto item : scene()->items()) {
+        if (item->type() == 1145) {
+            scene()->removeItem(item);
+            delete item;
+        }
+    }
+}
+
 void FrameGraphicsView::customScale(double ratio)
 {
     if (scaledRatio + ratio < 0.99 || scaledRatio + ratio > 4) {
@@ -66,12 +76,12 @@ void FrameGraphicsView::mousePressEvent(QMouseEvent* event)
     else if (frameState == FramePen) {
         if (event->button() == Qt::LeftButton) {
             dragLastPoint = event->pos();
-
             currentPenItem = new PenGraphicsItem(this);
             currentPenItem->setPen(pen);
             currentPenItem->setZValue(1);
             QPainterPath path = currentPenItem->path();
             path.moveTo(mapToScene(dragLastPoint.toPoint()));
+            path.lineTo(mapToScene(dragLastPoint.toPoint()) + QPointF(0.001, 0));
             currentPenItem->setPath(path);
             scene()->addItem(currentPenItem);
         }
@@ -100,23 +110,44 @@ void FrameGraphicsView::mouseMoveEvent(QMouseEvent* event)
     }
     else if (frameState == FramePen) {
         if (event->buttons() & Qt::LeftButton) {
-            QPainterPath path = currentPenItem->path();
-            path.lineTo(mapToScene(event->pos()));
-            currentPenItem->setPath(path);
-            dragLastPoint = event->pos();
+            if (not currentPenItem) {
+                dragLastPoint = event->pos();
+                currentPenItem = new PenGraphicsItem(this);
+                currentPenItem->setPen(pen);
+                currentPenItem->setZValue(1);
+                QPainterPath path = currentPenItem->path();
+                path.moveTo(mapToScene(dragLastPoint.toPoint()));
+                path.lineTo(mapToScene(dragLastPoint.toPoint()) + QPointF(0.001, 0));
+                currentPenItem->setPath(path);
+                scene()->addItem(currentPenItem);
+            }
+            else {
+                QPainterPath path = currentPenItem->path();
+                path.lineTo(mapToScene(event->pos()));
+                currentPenItem->setPath(path);
+                dragLastPoint = event->pos();
+            }
         }
     }
     else if (frameState == FrameEraser) {
         if (event->buttons() & Qt::LeftButton) {
-            QPainterPath path = currentEraserItem->path();
-            path.moveTo(mapToScene(dragLastPoint.toPoint()));
-            path.lineTo(mapToScene(event->pos()));
-            currentEraserItem->setPath(path);
-            dragLastPoint = event->pos();
+            if (not currentEraserItem) {
+                dragLastPoint = event->pos();
+                currentEraserItem = new EraserGraphicsItem(this);
+                currentEraserItem->setPen(eraser);
+                currentEraserItem->setZValue(1);
+            }
+            else {
+                QPainterPath path = currentEraserItem->path();
+                path.moveTo(mapToScene(dragLastPoint.toPoint()));
+                path.lineTo(mapToScene(event->pos()));
+                currentEraserItem->setPath(path);
+                dragLastPoint = event->pos();
+            }
 
             for (auto item : penItems) {
                 if (currentEraserItem->collidesWithPath(item->path())) {
-                    path = item->path();
+                    auto path = item->path();
                     // 0: initail 1: contained 2: new item
                     int nowInItemState = 0;
                     PenGraphicsItem* newItem = nullptr;
@@ -179,7 +210,7 @@ void FrameGraphicsView::mouseMoveEvent(QMouseEvent* event)
             }
         }
     }
-}
+    }
 
 void FrameGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {

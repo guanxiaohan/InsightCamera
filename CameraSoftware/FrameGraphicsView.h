@@ -32,6 +32,7 @@ public:
     void resetViewPort(int width, int height);
     void setFrameDraggable(nowState val);
     void setEraserWidth(int width);
+    void clearFrame();
     QPen pen;
     QPen eraser;
     QGraphicsItem* bottomItem = nullptr;

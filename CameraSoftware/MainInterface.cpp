@@ -299,11 +299,24 @@ void MainInterface::PenButtonClicked()
 
 void MainInterface::EraserButtonClicked()
 {
-	ResetToolButtons();
-	EraserButton->setCheckState(true);
-	EraserButton->setIconState(ToolBarButton::CheckHover);
-	nowTool = Eraser;
-	ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FrameEraser);
+	if (nowTool != Eraser) {
+		ResetToolButtons();
+		EraserButton->setCheckState(true);
+		EraserButton->setIconState(ToolBarButton::CheckHover);
+		nowTool = Eraser;
+		ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FrameEraser);
+	}
+	else {
+		EraserPanel = QSharedPointer<EraserOptionsWidget>(new EraserOptionsWidget(this));
+		EraserPanel->setParent(this);
+		auto geometry = ToolBar->geometry();
+		geometry.adjust(185, -156, 0, 0);
+		geometry.setSize(QSize(230, 150));
+		EraserPanel->setGeometry(geometry);
+		connect(EraserPanel.data(), &EraserOptionsWidget::clearSignal, ui->CameraFrame, &FrameGraphicsView::clearFrame);
+		EraserPanel->show();
+		EraserPanel->raise();
+	}
 }
 
 void MainInterface::UndoButtonClicked()

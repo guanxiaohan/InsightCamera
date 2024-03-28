@@ -34,6 +34,7 @@
 #include "CapturesList.h"
 #include "CapturedNotify.h"
 #include "BottomVideoGraphicsItem.h"
+#include "EraserOptionsWidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainInterfaceClass; };
@@ -75,6 +76,7 @@ private:
     QToolButton* RightWidgetButton;
     UnderToolBar* ToolBar;
     CapturesList* CapturesWidget;
+    QSharedPointer<EraserOptionsWidget> EraserPanel;
     QSharedPointer<AnimationMenu> PopMenu;
     QSharedPointer<CapturedNotify> CapturePopNotify;
 

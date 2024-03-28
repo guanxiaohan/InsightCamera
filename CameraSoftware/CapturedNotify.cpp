@@ -49,7 +49,6 @@ CapturedNotify::~CapturedNotify()
 void CapturedNotify::appear()
 {
 	moveAnimation->setStartValue(QPoint(x(), y()));
-	qDebug() << x() << "" << y();
 	moveAnimation->setEndValue(QPoint(x() - CapturedNotifyWidth - 5, y()));
 	moveAnimation->setDuration((CapturedNotifyWidth + 5) * 2.2);
 	moveAnimation->start();
