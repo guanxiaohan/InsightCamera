@@ -26,6 +26,12 @@ const QList<QCameraDevice> CameraManager::getAvailableCameras()
 
 void CameraManager::setCamera(QCameraDevice device)
 {
+	if (device.description().startsWith("OBS")) {
+		return;
+	}
+	if (inputCamera) {
+		delete inputCamera;
+	}
 	inputCamera = new QCamera(device);
 	inputCamera->setActive(true);
 	outputAvailable = true;
@@ -41,6 +47,11 @@ bool CameraManager::setCamera(QString cameraName)
 		}
 	}
 	return false;
+}
+
+bool CameraManager::isAvailable() const
+{
+	return outputAvailable;
 }
 
 QSize CameraManager::getMaxResolution()
@@ -59,4 +70,3 @@ QSize CameraManager::getMaxResolution()
 	}
 	return resolutions[maxIndex];
 }
-

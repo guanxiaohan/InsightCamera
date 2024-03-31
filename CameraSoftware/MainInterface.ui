@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainInterface</string>
+   <string>InsightCamera</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="FrameGraphicsView" name="CameraFrame">

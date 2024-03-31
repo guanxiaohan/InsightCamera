@@ -9,6 +9,7 @@ MainInterface::MainInterface(QWidget* parent)
 	cameraManager = new CameraManager(this);
 	videoItem = new BottomVideoGraphicsItem(this);
 	captureSession = new QMediaCaptureSession();
+	captureSession->setVideoOutput(videoItem);
 
 	setWindowState(Qt::WindowFullScreen);
 
@@ -111,7 +112,12 @@ MainInterface::MainInterface(QWidget* parent)
 	updateTimer->setInterval(32);
 	connect(updateTimer, &QTimer::timeout, this, &MainInterface::updateCapture);
 	updateTimer->start();
+	watchdogTimer = new QTimer();
+	watchdogTimer->setInterval(1000);
+	connect(watchdogTimer, &QTimer::timeout, this, &MainInterface::initailizeCamera);
 	initailizeCamera();
+	captureSession->setImageCapture(&imageCapture);
+	connect(&imageCapture, &QImageCapture::imageCaptured, this, &MainInterface::captureReturned);
 
 	mainScene = new QGraphicsScene();
 	mainScene->addItem(videoItem);
@@ -138,12 +144,6 @@ MainInterface::~MainInterface()
 	}
 	delete mainScene;
 	delete updateTimer;
-	/*delete MenuButton;
-	delete SelectButton;
-	delete PenButton;
-	delete EraserButton;
-	delete UndoButton;
-	delete CaptureButton;*/
 	delete RightWidgetButton;
 	delete ToolBar;
 	for (auto i : captureScenes) {
@@ -158,18 +158,24 @@ MainInterface::~MainInterface()
 
 void MainInterface::initailizeCamera()
 {
+	watchdogTimer->stop();
 	if (cameraManager->checkCameraAvailablity()) {
 		cameraManager->setCamera(cameraManager->getAvailableCameras()[0]);
 	}
 	if (cameraManager->isAvailable()) {
 		captureSession->setCamera(cameraManager->camera());
-		captureSession->setImageCapture(&imageCapture);
-		connect(&imageCapture, &QImageCapture::imageCaptured, this, &MainInterface::captureReturned);
 		auto Resolution = cameraManager->getMaxResolution();
+
+		auto scale = (double)height() / Resolution.height();
+		Resolution.setHeight(Resolution.height() * scale);
+		Resolution.setWidth(Resolution.width() * scale);
+
 		videoItem->setSize(Resolution);
+		videoItem->setPos(width() / 2 + (width() - Resolution.width()) / 2,
+			height() / 2 + (height() - Resolution.height()) / 2);
 		CapturesWidget->AboveListWidget->setFixedHeight(Resolution.height() / (Resolution.width() / 170) + 10);
 	}
-	captureSession->setVideoOutput(videoItem);
+	watchdogTimer->start();
 }
 
 void MainInterface::operationMenuReturn(int index)
@@ -252,6 +258,8 @@ void MainInterface::captureReturned(int, QImage pix)
 {
 	CapturesWidget->AboveListWidget->updateCapture(0, pix);
 	realtimeCapture = pix;
+	watchdogTimer->stop();
+	watchdogTimer->start();
 }
 
 void MainInterface::captureNotifyClicked(int index)
@@ -290,11 +298,26 @@ void MainInterface::SelectButtonClicked()
 
 void MainInterface::PenButtonClicked()
 {
-	ResetToolButtons();
-	PenButton->setCheckState(true);
-	PenButton->setIconState(ToolBarButton::CheckHover);
-	nowTool = Pen;
-	ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FramePen);
+	if (nowTool != Pen) {
+		ResetToolButtons();
+		PenButton->setCheckState(true);
+		PenButton->setIconState(ToolBarButton::CheckHover);
+		nowTool = Pen;
+		ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FramePen);
+	}
+	else {
+		PenPanel = QSharedPointer<PenOptionsWidget>(new PenOptionsWidget(this, ui->CameraFrame->pen.width(), ui->CameraFrame->pen.color()));
+		PenPanel->setParent(this);
+		auto geometry = ToolBar->geometry();
+		geometry.adjust(135, -PenPanelHeight - 6, 0, 0);
+		geometry.setSize(QSize(PenPanelWidth, PenPanelHeight));
+		PenPanel->setGeometry(geometry);
+		connect(PenPanel.data(), &PenOptionsWidget::setColorSignal, ui->CameraFrame, &FrameGraphicsView::setPenColor);
+		connect(PenPanel.data(), &PenOptionsWidget::setPenWidthSignal, ui->CameraFrame, &FrameGraphicsView::setPenWidth);
+		PenPanel->appear();
+		PenPanel->show();
+		PenPanel->raise();
+	}
 }
 
 void MainInterface::EraserButtonClicked()
@@ -307,13 +330,16 @@ void MainInterface::EraserButtonClicked()
 		ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FrameEraser);
 	}
 	else {
-		EraserPanel = QSharedPointer<EraserOptionsWidget>(new EraserOptionsWidget(this));
+		EraserPanel = QSharedPointer<EraserOptionsWidget>(new EraserOptionsWidget(this, ui->CameraFrame->eraser.width()));
 		EraserPanel->setParent(this);
 		auto geometry = ToolBar->geometry();
 		geometry.adjust(185, -156, 0, 0);
 		geometry.setSize(QSize(230, 150));
 		EraserPanel->setGeometry(geometry);
-		connect(EraserPanel.data(), &EraserOptionsWidget::clearSignal, ui->CameraFrame, &FrameGraphicsView::clearFrame);
+		connect(EraserPanel.data(), &EraserOptionsWidget::clearSignal, this, &MainInterface::ClearButtonClicked);
+		connect(EraserPanel.data(), &EraserOptionsWidget::clearAllSignal, this, &MainInterface::ClearAllButtonClicked);
+		connect(EraserPanel.data(), &EraserOptionsWidget::setEraserWidthSignal, ui->CameraFrame, &FrameGraphicsView::setEraserWidth);
+		EraserPanel->appear();
 		EraserPanel->show();
 		EraserPanel->raise();
 	}
@@ -321,6 +347,7 @@ void MainInterface::EraserButtonClicked()
 
 void MainInterface::UndoButtonClicked()
 {
+	ui->CameraFrame->undoProcess();
 }
 
 void MainInterface::CaptureButtonClicked()
@@ -328,22 +355,25 @@ void MainInterface::CaptureButtonClicked()
 	auto scene = new QGraphicsScene();
 	auto item = new QGraphicsPixmapItem();
 	auto picture = QPixmap::fromImage(realtimeCapture);
-	picture = picture.scaled(width(), height(), Qt::KeepAspectRatio);
-	item->setPixmap(picture);
-	item->setPos(width() / 2, height() / 2);
-	scene->addItem(item);
-	scene->setSceneRect(0, 0, width()*2, height()*2);
-	captureScenes.append(scene);
-	CapturesWidget->BelowListWidget->addPixmap(picture);
+	if (not realtimeCapture.isNull()) {
+		picture = picture.scaled(width(), height(), Qt::KeepAspectRatio);
+		item->setPixmap(picture);
+		item->setPos(width() / 2 + (width() - picture.width()) / 2,
+			height() / 2 + (height() - picture.height()) / 2);
+		scene->addItem(item);
+		scene->setSceneRect(0, 0, width() * 2, height() * 2);
+		captureScenes.append(scene);
+		CapturesWidget->BelowListWidget->addPixmap(picture);
 
-	if (SideBarShowing == 0) {
-		CapturePopNotify = QSharedPointer<CapturedNotify>(new CapturedNotify(picture, this, CapturesWidget->BelowListWidget->count() - 1));
-		CapturePopNotify->setGeometry(width() + 1, height() - CapturePopNotify->sizeHint().height() - 5, CapturedNotifyWidth, CapturePopNotify->sizeHint().height());
-		connect(CapturePopNotify.data(), &CapturedNotify::switchToPixmap, this, &MainInterface::captureNotifyClicked);
-		CapturePopNotify->installEventFilter(this);
-		CapturePopNotify->show();
-		CapturePopNotify->raise();
-		CapturePopNotify->appear();
+		if (SideBarShowing == 0) {
+			CapturePopNotify = QSharedPointer<CapturedNotify>(new CapturedNotify(picture, this, CapturesWidget->BelowListWidget->count() - 1));
+			CapturePopNotify->setGeometry(width() + 1, height() - CapturePopNotify->sizeHint().height() - 5, CapturedNotifyWidth, CapturePopNotify->sizeHint().height());
+			connect(CapturePopNotify.data(), &CapturedNotify::switchToPixmap, this, &MainInterface::captureNotifyClicked);
+			CapturePopNotify->installEventFilter(this);
+			CapturePopNotify->show();
+			CapturePopNotify->raise();
+			CapturePopNotify->appear();
+		}
 	}
 }
 
@@ -353,6 +383,26 @@ void MainInterface::RightWidgetButtonClicked()
 		CapturePopNotify->tryDisappear();
 	}
 	switchRightSideBar();
+}
+
+void MainInterface::ClearButtonClicked()
+{
+	ui->CameraFrame->clearFrame();
+	ResetToolButtons();
+	PenButton->setCheckState(true);
+	PenButton->setIconState(ToolBarButton::CheckHover);
+	nowTool = Pen;
+	ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FramePen);
+}
+
+void MainInterface::ClearAllButtonClicked()
+{
+	ui->CameraFrame->clearAllFrame();
+	ResetToolButtons();
+	PenButton->setCheckState(true);
+	PenButton->setIconState(ToolBarButton::CheckHover);
+	nowTool = Pen;
+	ui->CameraFrame->setFrameDraggable(FrameGraphicsView::FramePen);
 }
 
 void MainInterface::resizeEvent(QResizeEvent* event) {
@@ -403,7 +453,7 @@ bool MainInterface::eventFilter(QObject* obj, QEvent* event)
 			emit ToolBarButtonLeave(CaptureButton);
 		}
 	}
-	if (obj == CapturePopNotify.data()) {
+	else if (obj == CapturePopNotify.data()) {
 		if (event->type() == QEvent::FocusOut) {
 			CapturePopNotify->noFocused();
 		}

@@ -79,6 +79,9 @@
     <ClCompile Include="EraserOptionsWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PenOptionsWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraManager.h">
@@ -120,6 +123,9 @@
     <QtMoc Include="EraserOptionsWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="PenOptionsWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <None Include="StyleSheets\StyleSheet.qss">
@@ -134,6 +140,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="EraserOptionsWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="PenOptionsWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

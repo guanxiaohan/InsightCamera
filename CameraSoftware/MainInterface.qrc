@@ -52,5 +52,14 @@
         <file alias="CheckedIcon">Images/Checked.svg</file>
         <file alias="CrossIcon1">Images/Cross1.svg</file>
         <file alias="CrossIcon2">Images/Cross2.svg</file>
+        <file alias="ClearIcon1">Images/Clear1.svg</file>
+        <file alias="ClearIcon2">Images/Clear2.svg</file>
+        <file alias="ClearIcon3">Images/Clear3.svg</file>
+        <file alias="ClearIcon4">Images/Clear4.svg</file>
+        <file alias="ClearAllIcon1">Images/ClearAll1.svg</file>
+        <file alias="ClearAllIcon2">Images/ClearAll2.svg</file>
+        <file alias="ClearAllIcon3">Images/ClearAll3.svg</file>
+        <file alias="ClearAllIcon4">Images/ClearAll4.svg</file>
+        <file alias="ErasorCursorIcon">Images/EraserCursor.svg</file>
     </qresource>
 </RCC>

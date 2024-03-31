@@ -18,7 +18,7 @@ public:
 	const QList<QCameraDevice> getAvailableCameras();
 	void setCamera(QCameraDevice device);
 	bool setCamera(QString cameraName);
-	bool isAvailable() const { return outputAvailable; };
+	bool isAvailable() const;
 	QCamera* camera() { return inputCamera; };
 	QSize getMaxResolution();
 

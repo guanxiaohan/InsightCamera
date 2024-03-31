@@ -1,0 +1,10 @@
+<svg role="img" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 28 28"
+    aria-labelledby="cursorIconTitle" stroke="#00B266" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+    fill="none" color="#2329D6">
+    <title id="cursorIconTitle">Erasor</title>
+    <path d="M15 21 L6 21 L2 17 L15 2 L22 9 L11 20 L5 14" />
+    <line x1="21" x2="26" y1="22" y2="17" />
+    <line x1="21" x2="26" y1="17" y2="22" />
+    <line x1="13" x2="19" y1="24" y2="24" />
+    <line x1="5" x2="9" y1="24" y2="24" />
+</svg>

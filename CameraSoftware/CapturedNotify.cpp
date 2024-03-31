@@ -94,11 +94,13 @@ void CapturedNotify::recall()
 	emit switchToPixmap(returnIndex);
 }
 
-void CapturedNotify::disappearFinished() {
+void CapturedNotify::disappearFinished() 
+{
 	emit disappeared();
 }
 
-void CapturedNotify::appearFinished() {
+void CapturedNotify::appearFinished() 
+{
 	appearing = false;
 }
 

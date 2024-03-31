@@ -35,6 +35,7 @@
 #include "CapturedNotify.h"
 #include "BottomVideoGraphicsItem.h"
 #include "EraserOptionsWidget.h"
+#include "PenOptionsWidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainInterfaceClass; };
@@ -61,6 +62,7 @@ private:
     QMediaCaptureSession* captureSession;
     QImageCapture imageCapture;
     QTimer* updateTimer;
+    QTimer* watchdogTimer;
     Tools nowTool = Select;
     bool menuShowing = false;
     int SideBarShowing = 0;
@@ -77,6 +79,7 @@ private:
     UnderToolBar* ToolBar;
     CapturesList* CapturesWidget;
     QSharedPointer<EraserOptionsWidget> EraserPanel;
+    QSharedPointer<PenOptionsWidget> PenPanel;
     QSharedPointer<AnimationMenu> PopMenu;
     QSharedPointer<CapturedNotify> CapturePopNotify;
 
@@ -95,6 +98,8 @@ private:
     void UndoButtonClicked();
     void CaptureButtonClicked();
     void RightWidgetButtonClicked();
+    void ClearButtonClicked();
+    void ClearAllButtonClicked();
 
 protected:
     void resizeEvent(QResizeEvent *event);

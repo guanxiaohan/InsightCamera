@@ -1,0 +1,8 @@
+<svg role="img" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
+    aria-labelledby="cursorIconTitle" stroke="#00CC66" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+    fill="none" color="#2329D6">
+    <title id="cursorIconTitle">Erasor</title>
+    <path d="M15 21 L6 21 L2 17 L15 2 L22 9 L11 20 L5 14" />
+    <line x1="18" x2="22" y1="21" y2="17" />
+    <line x1="18" x2="22" y1="17" y2="21" />
+</svg>

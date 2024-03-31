@@ -110,6 +110,7 @@
     <ClCompile Include="EraserGraphicsItem.cpp" />
     <ClCompile Include="EraserOptionsWidget.cpp" />
     <ClCompile Include="PenGraphicsItem.cpp" />
+    <ClCompile Include="PenOptionsWidget.cpp" />
     <ClCompile Include="ToolBarButton.cpp" />
     <ClCompile Include="UnderToolBar.cpp" />
     <QtRcc Include="MainInterface.qrc" />
@@ -122,6 +123,7 @@
     <ClCompile Include="FrameGraphicsView.cpp" />
     <ClCompile Include="MainInterface.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="PenOptionsWidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraManager.h" />
@@ -164,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="EraserOptionsWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="PenOptionsWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
