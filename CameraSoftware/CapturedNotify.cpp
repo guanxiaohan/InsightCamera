@@ -27,7 +27,7 @@ CapturedNotify::CapturedNotify(QPixmap pixmap, QWidget *parent, int ind)
 	moveAnimation->setEasingCurve(QEasingCurve::OutQuint);
 	ui->AboveLabel->setText(tr("New Capture Saved."));
 	ui->PixmapLabel->setPixmap(pixmap.scaled(CapturedNotifyWidth, 150, Qt::KeepAspectRatio));
-	ui->DescriptionLabel->setText("Click to switch to this capture.");
+	ui->DescriptionLabel->setText(tr("Click to switch to this capture."));
 	ui->DescriptionLabel->setWordWrap(true);
 	disappearTimer->setInterval(6000);
 	disappearTimer->setSingleShot(true);

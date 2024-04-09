@@ -13,14 +13,14 @@ class PenGraphicsItem  : public QObject, public QGraphicsPathItem
 public:
 	PenGraphicsItem(QObject *parent);
 	~PenGraphicsItem();
-	void addRegion(QRegion region);
-	void updateRegion();
+	//void addRegion(QRegion region);
+	//void updateRegion();
 
 private:
-	QObject* pParent;
-	QRegion paintRegion;
+	//QObject* pParent;
+	//QRegion paintRegion;
 
 protected:
-	void paint(QPainter* p, const QStyleOptionGraphicsItem* opt, QWidget* widget) override;
+	//void paint(QPainter* p, const QStyleOptionGraphicsItem* opt, QWidget* widget) override;
 	virtual int type() const override;
 };

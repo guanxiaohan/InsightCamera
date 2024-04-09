@@ -14,10 +14,10 @@ CapturesList::CapturesList(QWidget *parent)
 		"border-radius: 13px;"
 		"}"
 	);
-	ui->SaveButton->setIconid(tr("Save"));
-	ui->LoadButton->setIconid(tr("Load"));
-	ui->CompareButton->setIconid(tr("Compare"));
-	ui->RemoveButton->setIconid(tr("Remove"));
+	ui->SaveButton->setIconid("Save");
+	ui->LoadButton->setIconid("Load");
+	ui->CompareButton->setIconid("Compare");
+	ui->RemoveButton->setIconid("Remove");
 	ui->SaveButton->installEventFilter(this);
 	ui->LoadButton->installEventFilter(this);
 	ui->CompareButton->installEventFilter(this);

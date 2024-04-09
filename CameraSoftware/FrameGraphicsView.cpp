@@ -3,6 +3,7 @@
 FrameGraphicsView::FrameGraphicsView(QWidget *parent)
     : QGraphicsView(parent)
 {
+    penItems.reserve(1024);
     setStyleSheet("background: rgb(120, 120, 120);");
     setDragMode(QGraphicsView::ScrollHandDrag);
     setAttribute(Qt::WA_AcceptTouchEvents);
@@ -461,14 +462,14 @@ void FrameGraphicsView::paintEvent(QPaintEvent* event)
     QGraphicsView::paintEvent(event);
 }
 
-bool FrameGraphicsView::viewportEvent(QEvent* event)
+bool FrameGraphicsView::event(QEvent* event)
 {
     if (event->type() == QEvent::TouchBegin) {
         QTouchEvent* touchEvent = static_cast<QTouchEvent*>(event);
-        if (touchEvent->pointCount() >= 2) {
+        if (touchEvent->pointCount() == 0) {
             return true;
         }
-        if (touchEvent->pointCount() == 0) {
+        if (touchEvent->pointCount() >= 2) {
             return true;
         }
         isTouchPressing = true;
@@ -506,10 +507,10 @@ bool FrameGraphicsView::viewportEvent(QEvent* event)
     }
     else if (event->type() == QEvent::TouchUpdate) {
         QTouchEvent* touchEvent = static_cast<QTouchEvent*>(event);
-        if (touchEvent->pointCount() >= 2) {
+        if (touchEvent->pointCount() == 0) {
             return true;
         }
-        if (touchEvent->pointCount() == 0) {
+        if (touchEvent->pointCount() >= 2) {
             return true;
         }
         isTouchPressing = true;
@@ -539,7 +540,7 @@ bool FrameGraphicsView::viewportEvent(QEvent* event)
             }
             else {
                 auto movedVal = touchPointPos - dragLastPoint;
-                if (abs(movedVal.x()) + abs(movedVal.y()) >= 2) {
+                if (abs(movedVal.x()) + abs(movedVal.y()) > 2) {
                     QPainterPath path = currentPenItem->path();
                     path.lineTo(mapToScene(touchPointPos));
                     currentPenItem->setPath(path);
@@ -710,7 +711,7 @@ bool FrameGraphicsView::viewportEvent(QEvent* event)
         return true;
     }
 
-    return QAbstractScrollArea::viewportEvent(event);
+    return QGraphicsView::event(event);
 }
 
 UndoItem::UndoItem()

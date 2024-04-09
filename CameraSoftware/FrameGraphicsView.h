@@ -77,6 +77,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event);
     void wheelEvent(QWheelEvent *event);
     void paintEvent(QPaintEvent* event) override;
-    bool viewportEvent(QEvent* event) override;
+    bool event(QEvent* event) override;
 
 };

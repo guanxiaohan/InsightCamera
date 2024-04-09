@@ -13,12 +13,12 @@ MainInterface::MainInterface(QWidget* parent)
 
 	setWindowState(Qt::WindowFullScreen);
 
-	MenuButton = new ToolBarButton(this, "Menu", "Menu");
-	SelectButton = new ToolBarButton(this, "Select", "Select");
-	PenButton = new ToolBarButton(this, "Pen", "Pen");
-	EraserButton = new ToolBarButton(this, "Eraser", "Eraser");
-	UndoButton = new ToolBarButton(this, "Undo", "Undo");
-	CaptureButton = new ToolBarButton(this, "Capture", "Cptr.");
+	MenuButton = new ToolBarButton(this, "Menu", tr("Menu"));
+	SelectButton = new ToolBarButton(this, "Select", tr("Select"));
+	PenButton = new ToolBarButton(this, "Pen", tr("Pen"));
+	EraserButton = new ToolBarButton(this, "Eraser", tr("Eraser"));
+	UndoButton = new ToolBarButton(this, "Undo", tr("Undo"));
+	CaptureButton = new ToolBarButton(this, "Capture", tr("Cptr."));
 	
 	MenuButton->installEventFilter(this);
 	connect(MenuButton, &ToolBarButton::buttonToggledTo, this, &MainInterface::MenuButtonClicked);
@@ -183,7 +183,7 @@ void MainInterface::operationMenuReturn(int index)
 	MenuButton->setCheckState(false);
 	switch (index) {
 	case 0:
-		QMessageBox::information(this, "About", "Nothing here.");
+		QMessageBox::information(this, tr("About"), tr("Nothing here."));
 		break;
 	case 1:
 		showMinimized();
@@ -279,9 +279,9 @@ void MainInterface::ResetToolButtons()
 void MainInterface::MenuButtonClicked()
 {
 	PopMenu = QSharedPointer<AnimationMenu>(new AnimationMenu(this));
-	PopMenu->addMenuItem("About", "About");
-	PopMenu->addMenuItem("Minimize", "Minimize");
-	PopMenu->addMenuItem("Exit", "Exit");
+	PopMenu->addMenuItem(tr("About"), "About");
+	PopMenu->addMenuItem(tr("Minimize"), "Minimize");
+	PopMenu->addMenuItem(tr("Exit"), "Exit");
 	connect(PopMenu.data(), &AnimationMenu::returnAction, this, &MainInterface::operationMenuReturn);
 	menuShowing = true;
 	PopMenu->exec(QPoint(ToolBar->x(),ToolBar->y() - PopMenu->getHeight() - 10));

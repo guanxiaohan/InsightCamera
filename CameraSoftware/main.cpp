@@ -6,10 +6,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
+#include <QTranslator>
 
-void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+static void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg)
 {
-    static QMutex mutex;
+    return;
+
+    /*static QMutex mutex;
     mutex.lock();
 
     QByteArray localMsg = msg.toLocal8Bit();
@@ -42,16 +45,19 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QS
     file.flush();
     file.close();
 
-    mutex.unlock();
+    mutex.unlock();*/
 }
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    qInstallMessageHandler(myMessageOutput);
-    auto file = QFile(":/MainInterface/StyleSheet");
-    auto sheet = file.readAll().toStdString();
-    a.setStyleSheet(QString::fromStdString(sheet));
+    //qInstallMessageHandler(myMessageOutput);
+    QTranslator translator;
+    //translator.load("InsightCamera_lang__zh_CN.qm");
+    a.installTranslator(&translator);
+    //auto file = QFile(":/MainInterface/StyleSheet");
+    //auto sheet = file.readAll().toStdString();
+    //a.setStyleSheet(QString::fromStdString(sheet));
     MainInterface w;
     w.show();
     return a.exec();

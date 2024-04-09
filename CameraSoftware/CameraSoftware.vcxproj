@@ -170,6 +170,9 @@
   <ItemGroup>
     <QtMoc Include="PenOptionsWidget.h" />
   </ItemGroup>
+  <ItemGroup>
+    <QtTranslation Include="InsightCamera_lang__zh_CN.ts" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />
