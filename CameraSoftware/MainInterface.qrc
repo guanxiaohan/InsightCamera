@@ -61,5 +61,9 @@
         <file alias="ClearAllIcon3">Images/ClearAll3.svg</file>
         <file alias="ClearAllIcon4">Images/ClearAll4.svg</file>
         <file alias="ErasorCursorIcon">Images/EraserCursor.svg</file>
+        <file alias="BackCameraIcon1">Images/BackCamera1.svg</file>
+        <file alias="BackCameraIcon2">Images/BackCamera2.svg</file>
+        <file alias="BackCameraIcon3">Images/BackCamera3.svg</file>
+        <file alias="BackCameraIcon4">Images/BackCamera4.svg</file>
     </qresource>
 </RCC>

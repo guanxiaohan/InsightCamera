@@ -46,8 +46,10 @@ EraserOptionsWidget::EraserOptionsWidget(QWidget* parent = nullptr, int eraserwi
 		"}"
 	);
 
-	ui->pushButton->setIconid(tr("Clear"));
-	ui->pushButton_2->setIconid(tr("ClearAll"));
+	ui->pushButton->setIconid("Clear");
+	ui->pushButton_2->setIconid("ClearAll");
+	ui->pushButton->setText(tr("Clear"));
+	ui->pushButton_2->setText(tr("Clear All"));
 	ui->pushButton->setParent(this);
 	ui->pushButton_2->setParent(this);
 	ui->pushButton->installEventFilter(this);

@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     //qInstallMessageHandler(myMessageOutput);
     QTranslator translator;
-    //translator.load("InsightCamera_lang__zh_CN.qm");
+    bool succeed = translator.load("InsightCamera_lang__zh_CN.qm");
     a.installTranslator(&translator);
     //auto file = QFile(":/MainInterface/StyleSheet");
     //auto sheet = file.readAll().toStdString();

@@ -102,6 +102,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimationMenu.cpp" />
+    <ClCompile Include="AnimationSlider.cpp" />
     <ClCompile Include="BottomPixmapGraphicsItem.cpp" />
     <ClCompile Include="BottomVideoGraphicsItem.cpp" />
     <ClCompile Include="CapturedNotify.cpp" />
@@ -172,6 +173,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtTranslation Include="InsightCamera_lang__zh_CN.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="AnimationSlider.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

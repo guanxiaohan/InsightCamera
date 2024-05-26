@@ -19,10 +19,10 @@ constexpr int PenPanelHeight = 187;
 const QList<QColor> PenColors = QList<QColor>(
 	{QColor(255, 255, 255), 
 	QColor(0, 0, 0),
-	QColor(255, 0, 0),
-	QColor(255, 255, 0),
-	QColor(0, 230, 80),
-	QColor(0, 80, 240)});
+	QColor(255, 30, 50),
+	QColor(240, 255, 0),
+	QColor(20, 230, 100),
+	QColor(50, 90, 255)});
 
 QString generateButtonsQSS();
 

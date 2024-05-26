@@ -14,10 +14,12 @@
 #include <QGraphicsVideoItem>
 #include <QRegion>
 #include <QTimer>
+#include <QMessageBox>
 #include <cmath>
 
 #include "PenGraphicsItem.h"
 #include "EraserGraphicsItem.h"
+#include "AnimationMenu.h"
 
 const int MAXIMUM_X_OFFSET = 0;
 const int MAXIMUM_Y_OFFSET = 0;
@@ -51,24 +53,31 @@ public:
     void clearFrame();
     void clearAllFrame();
     void undoProcess();
+    void setScaleFromSlider(int value);
+    void menuReturnAction(int);
     QPen pen;
     QPen eraser;
     QGraphicsItem* bottomItem = nullptr;
-
-private:
-    void recognizePen();
-    double scaledRatio = 1.0;
-    QPointF dragLastPoint;
     bool isMousePressing = false;
     bool isTouchPressing = false;
+
+private:
     QPoint posAnchor;
+    void recognizePen();
+    void functionMenu();
+    double scaledRatio = 1.0;
+    QPointF dragLastPoint;
+    QPointF selectLastPoint;
     QTimer* holdTimer;
+    QTimer* menuTimer;
     nowState frameState = FrameSelect;
     PenGraphicsItem* currentPenItem = nullptr;
     EraserGraphicsItem* currentEraserItem = nullptr;
+    PenGraphicsItem* operatePenItem = nullptr;
     QList<PenGraphicsItem*> penItems;
     QList<EraserGraphicsItem*> eraserItems;
     QList<UndoItem> undoStack;
+    QSharedPointer<AnimationMenu> PopMenu;
 
 protected:
     void customScale(double ratio);
@@ -78,5 +87,8 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void paintEvent(QPaintEvent* event) override;
     bool event(QEvent* event) override;
+
+signals:
+    void addSlider(int, int, QPoint);
 
 };

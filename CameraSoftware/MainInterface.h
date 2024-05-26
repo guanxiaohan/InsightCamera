@@ -36,6 +36,7 @@
 #include "BottomVideoGraphicsItem.h"
 #include "EraserOptionsWidget.h"
 #include "PenOptionsWidget.h"
+#include "AnimationSlider.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainInterfaceClass; };
@@ -49,6 +50,7 @@ public:
     MainInterface(QWidget *parent = nullptr);
     ~MainInterface();
     void initailizeCamera();
+    void frameAddSlider(int maxValue, int value, QPoint position);
     void operationMenuReturn(int);
     void changeAboveSceneIndex(int);
     void changeBelowSceneIndex(int);
@@ -65,6 +67,7 @@ private:
     QTimer* watchdogTimer;
     Tools nowTool = Select;
     bool menuShowing = false;
+    bool captureShowing = false;
     int SideBarShowing = 0;
     QImage realtimeCapture;
     QList<QGraphicsScene*> captureScenes;
@@ -82,6 +85,7 @@ private:
     QSharedPointer<PenOptionsWidget> PenPanel;
     QSharedPointer<AnimationMenu> PopMenu;
     QSharedPointer<CapturedNotify> CapturePopNotify;
+    QSharedPointer<AnimationSlider> FrameScaleSlider;
 
     QSharedPointer<QPropertyAnimation> RightButtonAnimation;
     QSharedPointer<QPropertyAnimation> CapturesWidgetAnimation;

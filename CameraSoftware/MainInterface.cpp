@@ -109,7 +109,7 @@ MainInterface::MainInterface(QWidget* parent)
 	connect(CapturesWidget->BelowListWidget, &CaptureListWidget::indexChanged, this, &MainInterface::changeBelowSceneIndex);
 
 	updateTimer = new QTimer();
-	updateTimer->setInterval(32);
+	updateTimer->setInterval(65);
 	connect(updateTimer, &QTimer::timeout, this, &MainInterface::updateCapture);
 	updateTimer->start();
 	watchdogTimer = new QTimer();
@@ -124,6 +124,7 @@ MainInterface::MainInterface(QWidget* parent)
 	ui->CameraFrame->setScene(mainScene);
 	ui->CameraFrame->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	ui->CameraFrame->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	connect(ui->CameraFrame, &FrameGraphicsView::addSlider, this, &MainInterface::frameAddSlider);
 	ui->CameraFrame->bottomItem = videoItem;
 	ui->statusBar->hide();
 
@@ -178,6 +179,29 @@ void MainInterface::initailizeCamera()
 	watchdogTimer->start();
 }
 
+void MainInterface::frameAddSlider(int maxValue, int value, QPoint position)
+{
+	/*if (childAt(position) != ui->CameraFrame) {
+		qDebug() << childAt(position) << ui->CameraFrame;
+		qDebug() << position;
+		return;
+	}*/
+	ui->CameraFrame->isMousePressing = false;
+	ui->CameraFrame->isTouchPressing = false;
+	FrameScaleSlider = QSharedPointer<AnimationSlider>(new AnimationSlider(this, maxValue, value, position, true));
+	FrameScaleSlider->setParent(this);
+	connect(FrameScaleSlider.data(), &AnimationSlider::valueChanged, ui->CameraFrame, &FrameGraphicsView::setScaleFromSlider);
+	FrameScaleSlider->raise();
+	FrameScaleSlider->show();
+	ui->CameraFrame->releaseMouse();
+	QPoint pt = QCursor().pos();
+	QMouseEvent* mEvent = new QMouseEvent(QEvent::MouseButtonPress, pt, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+	QApplication::postEvent(FrameScaleSlider.data(), mEvent);
+	QMouseEvent* nEvent = new QMouseEvent(QEvent::MouseButtonRelease, pt, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+	QApplication::postEvent(ui->CameraFrame, nEvent);
+	FrameScaleSlider->grabMouse();
+}
+
 void MainInterface::operationMenuReturn(int index)
 {
 	MenuButton->setCheckState(false);
@@ -198,12 +222,22 @@ void MainInterface::changeAboveSceneIndex(int)
 {
 	ui->CameraFrame->setScene(mainScene);
 	CapturesWidget->BelowListWidget->setSelectingIndex(-1);
+	if (captureShowing) {
+		captureShowing = false;
+		CaptureButton->changeIcon("Capture");
+		CaptureButton->changeText(tr("Cptr."));
+	}
 }
 
 void MainInterface::changeBelowSceneIndex(int index)
 {
 	ui->CameraFrame->setScene(captureScenes[index]);
 	CapturesWidget->AboveListWidget->setSelectingIndex(-1);
+	if (not captureShowing) {
+		captureShowing = true;
+		CaptureButton->changeIcon("BackCamera");
+		CaptureButton->changeText(tr("Back"));
+	}
 }
 
 void MainInterface::switchRightSideBar()
@@ -352,28 +386,34 @@ void MainInterface::UndoButtonClicked()
 
 void MainInterface::CaptureButtonClicked()
 {
-	auto scene = new QGraphicsScene();
-	auto item = new QGraphicsPixmapItem();
-	auto picture = QPixmap::fromImage(realtimeCapture);
-	if (not realtimeCapture.isNull()) {
-		picture = picture.scaled(width(), height(), Qt::KeepAspectRatio);
-		item->setPixmap(picture);
-		item->setPos(width() / 2 + (width() - picture.width()) / 2,
-			height() / 2 + (height() - picture.height()) / 2);
-		scene->addItem(item);
-		scene->setSceneRect(0, 0, width() * 2, height() * 2);
-		captureScenes.append(scene);
-		CapturesWidget->BelowListWidget->addPixmap(picture);
+	if (not captureShowing) {
+		auto scene = new QGraphicsScene();
+		auto item = new QGraphicsPixmapItem();
+		auto picture = QPixmap::fromImage(realtimeCapture);
+		if (not realtimeCapture.isNull()) {
+			picture = picture.scaled(width(), height(), Qt::KeepAspectRatio);
+			item->setPixmap(picture);
+			item->setPos(width() / 2 + (width() - picture.width()) / 2,
+				height() / 2 + (height() - picture.height()) / 2);
+			scene->addItem(item);
+			scene->setSceneRect(0, 0, width() * 2, height() * 2);
+			captureScenes.append(scene);
+			CapturesWidget->BelowListWidget->addPixmap(picture);
 
-		if (SideBarShowing == 0) {
-			CapturePopNotify = QSharedPointer<CapturedNotify>(new CapturedNotify(picture, this, CapturesWidget->BelowListWidget->count() - 1));
-			CapturePopNotify->setGeometry(width() + 1, height() - CapturePopNotify->sizeHint().height() - 5, CapturedNotifyWidth, CapturePopNotify->sizeHint().height());
-			connect(CapturePopNotify.data(), &CapturedNotify::switchToPixmap, this, &MainInterface::captureNotifyClicked);
-			CapturePopNotify->installEventFilter(this);
-			CapturePopNotify->show();
-			CapturePopNotify->raise();
-			CapturePopNotify->appear();
+			if (SideBarShowing == 0) {
+				CapturePopNotify = QSharedPointer<CapturedNotify>(new CapturedNotify(picture, this, CapturesWidget->BelowListWidget->count() - 1));
+				CapturePopNotify->setGeometry(width() + 1, height() - CapturePopNotify->sizeHint().height() - 5, CapturedNotifyWidth, CapturePopNotify->sizeHint().height());
+				connect(CapturePopNotify.data(), &CapturedNotify::switchToPixmap, this, &MainInterface::captureNotifyClicked);
+				CapturePopNotify->installEventFilter(this);
+				CapturePopNotify->show();
+				CapturePopNotify->raise();
+				CapturePopNotify->appear();
+			}
 		}
+	}
+	else {
+		changeAboveSceneIndex(0);
+		CapturesWidget->AboveListWidget->setSelectingIndex(0);
 	}
 }
 

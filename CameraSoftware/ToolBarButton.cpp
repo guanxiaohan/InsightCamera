@@ -143,6 +143,20 @@ void ToolBarButton::setIconid(QString iconid)
 	setObjectName(iconid + "Button");
 }
 
+void ToolBarButton::changeIcon(QString iconid)
+{
+	iconNormal = QIcon(":/MainInterface/" + iconid + "Icon1");
+	iconHover = QIcon(":/MainInterface/" + iconid + "Icon2");
+	iconChecked = QIcon(":/MainInterface/" + iconid + "Icon3");
+	iconCheckHover = QIcon(":/MainInterface/" + iconid + "Icon4");
+	setIcon(iconNormal);
+}
+
+void ToolBarButton::changeText(QString text)
+{
+	setText(text);
+}
+
 void ToolBarButton::iconChange()
 {
 

@@ -21,6 +21,8 @@ public:
 	void setCheckState(bool check);
 	void setIconState(IconState iconstate);
 	void setIconid(QString iconid);
+	void changeIcon(QString iconid);
+	void changeText(QString text);
 
 private:
 	QIcon iconNormal;

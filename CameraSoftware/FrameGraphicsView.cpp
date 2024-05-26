@@ -3,11 +3,12 @@
 FrameGraphicsView::FrameGraphicsView(QWidget *parent)
     : QGraphicsView(parent)
 {
+    setRenderHints(QPainter::Antialiasing);
     penItems.reserve(1024);
-    setStyleSheet("background: rgb(120, 120, 120);");
-    setDragMode(QGraphicsView::ScrollHandDrag);
+    setStyleSheet("QGraphicsView{background: rgb(120, 120, 120);}");
+    setDragMode(QGraphicsView::NoDrag);
     setAttribute(Qt::WA_AcceptTouchEvents);
-    pen.setColor(QColor(255, 0, 0));
+    pen.setColor(QColor(255, 30, 50));
     pen.setCapStyle(Qt::RoundCap);
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setWidth(4);
@@ -20,6 +21,9 @@ FrameGraphicsView::FrameGraphicsView(QWidget *parent)
     holdTimer = new QTimer();
     holdTimer->setSingleShot(true);
     connect(holdTimer, &QTimer::timeout, this, &FrameGraphicsView::recognizePen);
+    menuTimer = new QTimer();
+    menuTimer->setSingleShot(true);
+    connect(menuTimer, &QTimer::timeout, this, &FrameGraphicsView::functionMenu);
 }
 
 FrameGraphicsView::~FrameGraphicsView()
@@ -120,7 +124,7 @@ void FrameGraphicsView::undoProcess()
     }
     else if (process.type == UndoItem::UndoSplitter) {
         undoStack.removeLast();
-        do {
+        while (undoStack.last().type == UndoItem::UndoEraser) {
             auto process = undoStack.last();
             for (auto i : process.erasedPenQueue) {
                 i->scene()->removeItem(i);
@@ -129,52 +133,129 @@ void FrameGraphicsView::undoProcess()
             }
             process.drewPenItem->setPath(process.erasedPenPath);
             undoStack.removeLast();
-        } while (undoStack.last().type == UndoItem::UndoEraser);
+        }
+    }
+}
+
+void FrameGraphicsView::setScaleFromSlider(int value)
+{
+    // 0 ~ 100: 1.0 - 3.0
+    double scaleRatio = (double) value / 50 + 1.0;
+    customScale(scaleRatio - scaledRatio);
+}
+
+void FrameGraphicsView::menuReturnAction(int action)
+{
+    switch (action)
+    {
+    case 0: {
+        auto _pen = operatePenItem->pen();
+        _pen.setStyle(Qt::DashDotLine);
+        operatePenItem->setPen(_pen);
+        break;
+    }
+    case 1: {
+        auto path = operatePenItem->path();
+        auto newPath = QPainterPath();
+        auto startPoint = path.elementAt(0);
+        auto endPoint = path.elementAt(path.elementCount() - 1);
+        double x1, x2, y1, y2;
+        x1 = startPoint.x;
+        x2 = endPoint.x;
+        y1 = startPoint.y;
+        y2 = endPoint.y;
+        if (abs(y2 - y1) / abs(x2 - x1) > 0.18) {
+            QMessageBox::critical(this, tr("Operation Failed"), tr("Failed to convert the line into a number axis.\nError: Slope too steep. (Slope > 0.18)"));
+            return;
+        }
+        //y1 = (startPoint.y + endPoint.y) / 2;
+        //y2 = y1;
+        newPath.moveTo(x1, y1);
+        auto scaleProportion = scaledRatio * scaledRatio;
+        const int SPLITS = 10;
+        for (int i = 0; i < SPLITS - 1; i++) {
+            newPath.lineTo(x1 + (x2 - x1) / SPLITS * (i + 1), y1 + (y2 - y1) / SPLITS * (i + 1));
+            newPath.lineTo(x1 + (x2 - x1) / SPLITS * (i + 1), y1 + (y2 - y1) / SPLITS * (i + 1) - 5);
+            newPath.lineTo(x1 + (x2 - x1) / SPLITS * (i + 1), y1 + (y2 - y1) / SPLITS * (i + 1));
+        }
+        newPath.lineTo(x2, y2);
+        newPath.lineTo(x2 - 12 / scaleProportion, y2 - 12 / scaleProportion);
+        newPath.lineTo(x2, y2);
+        newPath.lineTo(x2 - 12 / scaleProportion, y2 + 12 / scaleProportion);
+        operatePenItem->setPath(newPath);
+        break;
+    }
+
+    default:
+        break;
     }
 }
 
 void FrameGraphicsView::recognizePen()
 {
-    if (not currentPenItem) {
-        return;
-    }
-
-    auto path = currentPenItem->path();
-    int elementCount = path.elementCount();
-    auto x1 = path.elementAt(0).x;
-    auto y1 = path.elementAt(0).y;
-    auto x2 = path.elementAt(elementCount - 1).x;
-    auto y2 = path.elementAt(elementCount - 1).y;
-    for (int i = 0; i < elementCount; i++) {
-        auto x0 = path.elementAt(i).x;
-        auto y0 = path.elementAt(i).y;
-        auto distance = fabs(((y1 - y2) * x0 - (x1 - x2) * y0 + (x1 * y2 - x2 * y1)) / sqrt(pow(y1 - y2, 2) + pow(x1 - x2, 2)));
-        if (distance > 45) {
+    if (frameState == FramePen) {
+        if (not currentPenItem) {
             return;
         }
+
+        auto path = currentPenItem->path();
+        int elementCount = path.elementCount();
+        auto x1 = path.elementAt(0).x;
+        auto y1 = path.elementAt(0).y;
+        auto x2 = path.elementAt(elementCount - 1).x;
+        auto y2 = path.elementAt(elementCount - 1).y;
+        auto length = sqrt(pow(abs(x2 - x1), 2) + pow(abs(y2 - y1), 2)) * 0.15;
+        for (int i = 0; i < elementCount; i++) {
+            auto x0 = path.elementAt(i).x;
+            auto y0 = path.elementAt(i).y;
+            auto distance = fabs(((y1 - y2) * x0 - (x1 - x2) * y0 + (x1 * y2 - x2 * y1)) / sqrt(pow(y1 - y2, 2) + pow(x1 - x2, 2)));
+            if (distance > length) {
+                return;
+            }
+        }
+        auto newStraightItem = new PenGraphicsItem(this);
+        newStraightItem->setPen(pen);
+        QPainterPath newPath = QPainterPath();
+        newPath.moveTo(x1 + 0.001, y1);
+        newPath.lineTo(x1, y1);
+        for (int i = 0; i < 30; i++) {
+            newPath.lineTo(x1 + (x2 - x1) / 30 * (i + 1), y1 + (y2 - y1) / 30 * (i + 1));
+        }
+        newStraightItem->setPath(newPath);
+        scene()->addItem(newStraightItem);
+        penItems.append(newStraightItem);
+        undoStack.removeLast();
+        undoStack.append(newStraightItem);
+        operatePenItem = newStraightItem;
+        penItems.removeOne(currentPenItem);
+        scene()->removeItem(currentPenItem);
+        delete currentPenItem;
+        currentPenItem = nullptr;
+        menuTimer->start(580);
     }
-    auto newStraightItem = new PenGraphicsItem(this);
-    newStraightItem->setPen(pen);
-    QPainterPath newPath = QPainterPath();
-    newPath.moveTo(x1 + 0.001, y1);
-    newPath.lineTo(x1, y1);
-    for (int i = 0; i < 20; i++) {
-        newPath.lineTo(x1 + (x2 - x1) / 20 * (i + 1), y1 + (y2 - y1) / 20 * (i + 1));
+    else if (frameState == FrameSelect) {
+        if (isMousePressing)
+            emit addSlider(100, (int)((scaledRatio - 1.0) * 50), parentWidget()->mapFromGlobal(QCursor().pos()));
+        else if (isTouchPressing)
+            emit addSlider(100, (int)((scaledRatio - 1.0) * 50), parentWidget()->mapFromGlobal(selectLastPoint).toPoint());
+        isTouchPressing = false;
+        isMousePressing = false;
     }
-    newStraightItem->setPath(newPath);
-    scene()->addItem(newStraightItem);
-    penItems.append(newStraightItem);
-    undoStack.removeLast();
-    undoStack.append(newStraightItem);
-    penItems.removeOne(currentPenItem);
-    scene()->removeItem(currentPenItem);
-    delete currentPenItem;
-    currentPenItem = nullptr;
+}
+
+void FrameGraphicsView::functionMenu()
+{
+    PopMenu = QSharedPointer<AnimationMenu>(new AnimationMenu(this));
+    PopMenu->addMenuItem(tr("To Dotted Line"), "DottedLine");
+    PopMenu->addMenuItem(tr("To Number Axis"), "NumberAxis");
+    connect(PopMenu.data(), &AnimationMenu::returnAction, this, &FrameGraphicsView::menuReturnAction);
+    auto item = operatePenItem->path().elementAt(operatePenItem->path().elementCount() - 1);
+    PopMenu->exec(QPoint(mapFromScene(item.x, item.y)));
 }
 
 void FrameGraphicsView::customScale(double ratio)
 {
-    if (scaledRatio + ratio < 0.99 || scaledRatio + ratio > 4) {
+    if (scaledRatio + ratio < 0.99 || scaledRatio + ratio > 3) {
         return;
     }
     scaledRatio = scaledRatio + ratio;
@@ -192,7 +273,6 @@ void FrameGraphicsView::customScale(double ratio)
 void FrameGraphicsView::mousePressEvent(QMouseEvent* event)
 {
     if (event->source() != Qt::MouseEventNotSynthesized) {
-        //event->ignore();
         return;
     }
     QGraphicsView::mousePressEvent(event);
@@ -201,6 +281,8 @@ void FrameGraphicsView::mousePressEvent(QMouseEvent* event)
         dragLastPoint = event->pos() - event->pos() + QPointF(width() / 2 / scaledRatio / scaledRatio, height() / 2 / scaledRatio / scaledRatio);
         dragLastPoint = dragLastPoint + mapToScene(0, 0);
         posAnchor = event->pos();
+        holdTimer->stop();
+        holdTimer->start(580);
     }
     else if (frameState == FramePen) {
         if (event->button() == Qt::LeftButton) {
@@ -219,6 +301,11 @@ void FrameGraphicsView::mousePressEvent(QMouseEvent* event)
     }
     else if (frameState == FrameEraser) {
         if (event->button() == Qt::LeftButton) {
+            if (currentEraserItem) {
+                currentEraserItem->scene()->removeItem(currentEraserItem);
+                delete currentEraserItem;
+            }
+
             dragLastPoint = event->pos();
             currentEraserItem = new EraserGraphicsItem(this);
             scene()->addItem(currentEraserItem);
@@ -246,6 +333,7 @@ void FrameGraphicsView::mouseMoveEvent(QMouseEvent* event)
         if (isMousePressing) {
             centerOn(dragLastPoint - offsetPos);
             scene()->update();
+            holdTimer->stop();
         }
     }
     else if (frameState == FramePen) {
@@ -269,7 +357,8 @@ void FrameGraphicsView::mouseMoveEvent(QMouseEvent* event)
                 currentPenItem->setPath(path);
                 dragLastPoint = event->pos();
                 holdTimer->stop();
-                holdTimer->start(700);
+                menuTimer->stop();
+                holdTimer->start(580);
             }
         }
     }
@@ -424,21 +513,22 @@ void FrameGraphicsView::mouseMoveEvent(QMouseEvent* event)
 void FrameGraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {
     if (event->source() != Qt::MouseEventNotSynthesized) {
-        //event->ignore();
         return;
     }
     QGraphicsView::mouseReleaseEvent(event);
     isMousePressing = false;
+    holdTimer->stop();
+    menuTimer->stop();
     if (event->button() == Qt::LeftButton) {
         dragLastPoint = QPoint();
         if (currentPenItem) {
-            holdTimer->stop();
             currentPenItem = nullptr;
         }
         if (currentEraserItem) {
             currentEraserItem->scene()->removeItem(currentEraserItem);
             delete currentEraserItem;
-            undoStack.append(UndoItem());
+            if (!undoStack.isEmpty() and undoStack.last().type == UndoItem::UndoEraser)
+                undoStack.append(UndoItem());
             currentEraserItem = nullptr;
         }
     }
@@ -477,7 +567,10 @@ bool FrameGraphicsView::event(QEvent* event)
         if (frameState == FrameSelect) {
             dragLastPoint = touchPointPos - touchPointPos + QPointF(width() / 2 / scaledRatio / scaledRatio, height() / 2 / scaledRatio / scaledRatio);
             dragLastPoint = dragLastPoint + mapToScene(0, 0);
+            selectLastPoint = touchPointPos;
             posAnchor = touchPointPos;
+            holdTimer->stop();
+            holdTimer->start(580);
         }
         else if (frameState == FramePen) {
             dragLastPoint = touchPointPos;
@@ -493,6 +586,11 @@ bool FrameGraphicsView::event(QEvent* event)
             undoStack.append(UndoItem(currentPenItem));
         }
         else if (frameState == FrameEraser) {
+            if (currentEraserItem) {
+                currentEraserItem->scene()->removeItem(currentEraserItem);
+                delete currentEraserItem;
+            }
+
             dragLastPoint = touchPointPos;
             currentEraserItem = new EraserGraphicsItem(this);
             scene()->addItem(currentEraserItem);
@@ -516,12 +614,17 @@ bool FrameGraphicsView::event(QEvent* event)
         isTouchPressing = true;
         auto touchPointPos = touchEvent->touchPoints().first().pos().toPoint();
         if (frameState == FrameSelect) {
-            QPointF offsetPos = touchPointPos - posAnchor;
-            offsetPos.setX(offsetPos.x() / scaledRatio / scaledRatio);
-            offsetPos.setY(offsetPos.y() / scaledRatio / scaledRatio);
-            if (isTouchPressing) {
-                centerOn(dragLastPoint - offsetPos);
-                scene()->update();
+            auto movedVal = touchPointPos - selectLastPoint;
+            if (abs(movedVal.x()) + abs(movedVal.y()) > (holdTimer->isActive() ? 5 : 2)) {
+                QPointF offsetPos = touchPointPos - posAnchor;
+                offsetPos.setX(offsetPos.x() / scaledRatio / scaledRatio);
+                offsetPos.setY(offsetPos.y() / scaledRatio / scaledRatio);
+                if (isTouchPressing) {
+                    centerOn(dragLastPoint - offsetPos);
+                    scene()->update();
+                    holdTimer->stop();
+                    selectLastPoint = touchPointPos;
+                }
             }
         }
         else if (frameState == FramePen) {
@@ -545,7 +648,8 @@ bool FrameGraphicsView::event(QEvent* event)
                     path.lineTo(mapToScene(touchPointPos));
                     currentPenItem->setPath(path);
                     dragLastPoint = touchPointPos;
-                    holdTimer->start(700);
+                    holdTimer->start(580);
+                    menuTimer->stop();
                 }
             }
         }
@@ -699,15 +803,17 @@ bool FrameGraphicsView::event(QEvent* event)
         isTouchPressing = false;
         dragLastPoint = QPoint();
         if (currentPenItem) {
-            holdTimer->stop();
             currentPenItem = nullptr;
         }
         if (currentEraserItem) {
             currentEraserItem->scene()->removeItem(currentEraserItem);
             delete currentEraserItem;
-            undoStack.append(UndoItem());
+            if (!undoStack.isEmpty() and undoStack.last().type == UndoItem::UndoEraser)
+                undoStack.append(UndoItem());
             currentEraserItem = nullptr;
         }
+        holdTimer->stop();
+        menuTimer->stop();
         return true;
     }
 
