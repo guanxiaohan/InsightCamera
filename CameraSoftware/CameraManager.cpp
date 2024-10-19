@@ -26,15 +26,20 @@ const QList<QCameraDevice> CameraManager::getAvailableCameras()
 
 void CameraManager::setCamera(QCameraDevice device)
 {
-	if (device.description().startsWith("OBS")) {
-		return;
-	}
+	//QMutex mutex;
+	//mutex.lock();
+	//if (device.description().startsWith("OBS")) {
+	//	//mutex.unlock();
+	//	return;
+	//}
 	if (inputCamera) {
 		delete inputCamera;
+		/*inputCamera = nullptr;*/
 	}
 	inputCamera = new QCamera(device);
 	inputCamera->setActive(true);
 	outputAvailable = true;
+	//mutex.unlock();
 }
 
 bool CameraManager::setCamera(QString cameraName)
@@ -59,7 +64,12 @@ QSize CameraManager::getMaxResolution()
 	int maxIndex = 0;
 	int maxSize = 0;
 	int i = 0;
-	const QList<QSize> resolutions = camera()->cameraDevice().photoResolutions();
+	if (camera() == nullptr)
+		return QSize(0, 0);
+	auto cameraDevice = camera()->cameraDevice();
+	if (cameraDevice.isNull())
+		return QSize(0, 0);
+	const QList<QSize> resolutions = cameraDevice.photoResolutions();
 	for (const QSize size : resolutions) {
 		int area = size.height() * size.width();
 		if (area > maxSize) {

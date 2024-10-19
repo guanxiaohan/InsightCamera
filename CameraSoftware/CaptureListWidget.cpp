@@ -9,6 +9,7 @@ CaptureListWidget::CaptureListWidget(QWidget *parent)
 	setMovement(QListView::Static);
 	setItemDelegate(new CustomItemDelegate(this));
 	setSelectionMode(QListWidget::NoSelection);
+	setDragEnabled(false);
 	//setFixedHeight(180);
 	setStyleSheet(
 		"QListWidget{"
@@ -47,7 +48,9 @@ void CaptureListWidget::addPixmap(QPixmap pixmap)
 
 void CaptureListWidget::updatePixmap(int index, QPixmap pixmap)
 {
-
+	if (!pixmap.isNull()) {
+		item(index)->setIcon(QIcon(pixmap));
+	}
 }
 
 void CaptureListWidget::updateCapture(int index, QImage pixmap)
@@ -81,6 +84,34 @@ void CaptureListWidget::clickedItem(QListWidgetItem* pos)
 		setProperty("selectingIndex", row);
 		emit indexChanged(row);
 	}
+}
+
+void CaptureListWidget::mousePressEvent(QMouseEvent* event)
+{
+	if (event->button() == Qt::LeftButton) {
+		dragStart = event->pos();
+	}
+	QListWidget::mousePressEvent(event);
+	dragged = false;
+}
+
+void CaptureListWidget::mouseMoveEvent(QMouseEvent* event)
+{
+	if (event->buttons() & Qt::LeftButton) {
+		QPoint distance = event->pos() - dragStart;
+		verticalScrollBar()->setValue(verticalScrollBar()->value() - distance.y());
+		dragStart = event->pos();
+	}
+	dragged = true;
+	QListWidget::mouseMoveEvent(event);
+}
+
+void CaptureListWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+	dragStart = QPoint();
+	if (not dragged)
+		QListWidget::mouseReleaseEvent(event);
+	dragged = false;
 }
 
 void CustomItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const

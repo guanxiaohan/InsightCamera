@@ -22,6 +22,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QIcon>
 #include <QGraphicsVideoItem>
+#include <QGraphicsPixmapItem>
 #include <QMediaCaptureSession>
 #include <QResizeEvent>
 
@@ -37,6 +38,9 @@
 #include "EraserOptionsWidget.h"
 #include "PenOptionsWidget.h"
 #include "AnimationSlider.h"
+#include "Configuration.h"
+#include "ConfigDialog.h"
+#include "ImageIndexWidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainInterfaceClass; };
@@ -47,7 +51,7 @@ class MainInterface : public QMainWindow
     Q_OBJECT
 
 public:
-    MainInterface(QWidget *parent = nullptr);
+    MainInterface(Configuration* configObj, QWidget *parent = nullptr);
     ~MainInterface();
     void initailizeCamera();
     void frameAddSlider(int maxValue, int value, QPoint position);
@@ -58,20 +62,25 @@ public:
 
 private:
     Ui::MainInterfaceClass *ui;
+    Configuration* configObject;
     CameraManager *cameraManager;
     QGraphicsScene *mainScene;
-    BottomVideoGraphicsItem* videoItem;
+    QGraphicsPixmapItem* videoItem;
     QMediaCaptureSession* captureSession;
     QImageCapture imageCapture;
     QTimer* updateTimer;
     QTimer* watchdogTimer;
+    QTimer* delayTimer;
     Tools nowTool = Select;
     bool menuShowing = false;
     bool captureShowing = false;
     int SideBarShowing = 0;
-    QImage realtimeCapture;
+    int refreshRate = 30;
+    QSize videoItemSize;
+    QPixmap realtimeCapture;
     QList<QGraphicsScene*> captureScenes;
 
+    FrameGraphicsView* CameraFrame;
     ToolBarButton* MenuButton;
     ToolBarButton* SelectButton;
     ToolBarButton* PenButton;
@@ -86,11 +95,14 @@ private:
     QSharedPointer<AnimationMenu> PopMenu;
     QSharedPointer<CapturedNotify> CapturePopNotify;
     QSharedPointer<AnimationSlider> FrameScaleSlider;
+    QPointer<ImageIndexWidget> captureIndexWidget;
 
     QSharedPointer<QPropertyAnimation> RightButtonAnimation;
     QSharedPointer<QPropertyAnimation> CapturesWidgetAnimation;
 
+    void setCameraISO(int iso);
     void switchRightSideBar();
+    void showSettingsDialog();
     void updateCapture();
     void captureReturned(int, QImage);
     void captureNotifyClicked(int);

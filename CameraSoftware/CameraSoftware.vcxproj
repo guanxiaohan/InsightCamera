@@ -108,8 +108,11 @@
     <ClCompile Include="CapturedNotify.cpp" />
     <ClCompile Include="CaptureListWidget.cpp" />
     <ClCompile Include="CapturesList.cpp" />
+    <ClCompile Include="ConfigDialog.cpp" />
+    <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="EraserGraphicsItem.cpp" />
     <ClCompile Include="EraserOptionsWidget.cpp" />
+    <ClCompile Include="ImageIndexWidget.cpp" />
     <ClCompile Include="PenGraphicsItem.cpp" />
     <ClCompile Include="PenOptionsWidget.cpp" />
     <ClCompile Include="ToolBarButton.cpp" />
@@ -117,7 +120,9 @@
     <QtRcc Include="MainInterface.qrc" />
     <QtUic Include="CapturedNotify.ui" />
     <QtUic Include="CapturesList.ui" />
+    <QtUic Include="ConfigDialog.ui" />
     <QtUic Include="EraserOptionsWidget.ui" />
+    <QtUic Include="ImageIndexWidget.ui" />
     <QtUic Include="MainInterface.ui" />
     <QtMoc Include="MainInterface.h" />
     <ClCompile Include="CameraManager.cpp" />
@@ -176,6 +181,15 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AnimationSlider.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="ConfigDialog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Configuration.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="ImageIndexWidget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

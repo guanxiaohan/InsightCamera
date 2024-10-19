@@ -1,0 +1,1174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigDialogUi</class>
+ <widget class="QDialog" name="ConfigDialogUi">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>590</width>
+    <height>452</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog{
+    background: #FCFCFC;
+}
+
+QWidget#graphicsTab{
+    background-color: #FCFCFC;
+    border: 1px solid #C0C0C0;
+    border-radius: 6px;
+}
+QWidget#deviceTab{
+    background-color: #FCFCFC;
+    border: 1px solid #C0C0C0;
+    border-radius: 6px;
+}
+QWidget#presetsTab{
+    background-color: #FCFCFC;
+    border: 1px solid #C0C0C0;
+    border-radius: 6px;
+}
+
+QLabel{
+    font-size: 13px;
+}
+
+QCheckBox{
+    font-size: 13px;
+}
+QCheckBox::indicator{
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+QCheckBox::indicator:unchecked{
+    outline: 1px solid gray;
+    background-color: #B7B7B7;
+}
+QCheckBox::indicator:checked{
+    image: url(:/MainInterface/CheckedIcon);
+}
+
+QComboBox{
+    border: 1px solid gray;
+    border-radius: 3px;
+    font-size: 13px;
+    height: 20px;
+}
+
+QPushButton{
+    height: 20px;
+    font-size: 13px;
+}
+
+QFrame#splitLine{
+    height: 1px;
+	background-color: #C0C0C0;
+}
+
+QTabWidget{
+    border: none;
+}
+QTabWidget::tab-bar{
+    left: 5px;
+}
+QTabBar::tab{
+    height: 23px;
+    font-size: 13px;
+    border-radius: 0px;
+    border: 1px solid #B0B0B0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+QTabBar::tab:selected, QTabBar::tab:hover{
+    background-color: #FFFFFF;
+}
+QTabBar::tab:!selected{
+    background-color: #F2F2F2;
+}</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>-1</y>
+     <width>591</width>
+     <height>451</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>3</number>
+    </property>
+    <property name="topMargin">
+     <number>5</number>
+    </property>
+    <property name="rightMargin">
+     <number>3</number>
+    </property>
+    <property name="bottomMargin">
+     <number>3</number>
+    </property>
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="configTabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="graphicsTab">
+       <attribute name="title">
+        <string>General</string>
+       </attribute>
+       <widget class="QWidget" name="formLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>640</width>
+          <height>421</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="graphicsTabLayout">
+         <property name="horizontalSpacing">
+          <number>16</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>12</number>
+         </property>
+         <property name="leftMargin">
+          <number>8</number>
+         </property>
+         <property name="topMargin">
+          <number>8</number>
+         </property>
+         <property name="rightMargin">
+          <number>8</number>
+         </property>
+         <property name="bottomMargin">
+          <number>8</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="languageLabel">
+           <property name="text">
+            <string>Language</string>
+           </property>
+           <property name="buddy">
+            <cstring>languageComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="languageComboBox">
+           <item>
+            <property name="text">
+             <string>简体中文 (中国)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>English (United States)</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="cameraDeviceLabel">
+           <property name="text">
+            <string>Camera Device</string>
+           </property>
+           <property name="buddy">
+            <cstring>cameraDeviceComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="cameraDeviceComboBox">
+           <item>
+            <property name="text">
+             <string>Do not Display Camera Image</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="resolutionLabel">
+           <property name="text">
+            <string>Resolution</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="refreshRateLabel">
+           <property name="text">
+            <string>Camera Refresh Rate</string>
+           </property>
+           <property name="buddy">
+            <cstring>refreshRateComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QComboBox" name="refreshRateComboBox">
+           <item>
+            <property name="text">
+             <string>15fps</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>20fps</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>30fps</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>60fps</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="2">
+          <widget class="Line" name="splitLine">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>1</height>
+            </size>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="lineWidth">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="clickToScreenshotLabel">
+           <property name="text">
+            <string>Show Click-to-Jump Widget after shooting</string>
+           </property>
+           <property name="buddy">
+            <cstring>clickToScreenshotCheckBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QCheckBox" name="clickToScreenshotCheckBox">
+           <property name="text">
+            <string>Enable</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="holdConvertionLabel">
+           <property name="text">
+            <string>Convert to Line by Holding</string>
+           </property>
+           <property name="buddy">
+            <cstring>holdConvertionCheckBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QCheckBox" name="holdConvertionCheckBox">
+           <property name="text">
+            <string>Enable</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="convertionMenuLabel">
+           <property name="text">
+            <string>Show Convertion Menu after Long-Hold</string>
+           </property>
+           <property name="buddy">
+            <cstring>convertionMenuCheckBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QCheckBox" name="convertionMenuCheckBox">
+           <property name="text">
+            <string>Enable</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <layout class="QHBoxLayout" name="resolutionLayout">
+           <item>
+            <widget class="QLabel" name="resolutionValueLabel">
+             <property name="text">
+              <string>--</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="showCurrentFrameLabel">
+           <property name="text">
+            <string>Show Current Frame Name (Beta)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QCheckBox" name="showCurrentFrameCheckBox">
+           <property name="text">
+            <string>Enable</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="0">
+          <widget class="QLabel" name="autoSinkToolBarLabel">
+           <property name="text">
+            <string>Auto Sink the Bottom Tool Bar (Beta)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QCheckBox" name="autoSinkToolBarCheckBox">
+           <property name="text">
+            <string>Enable</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0" colspan="2">
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="11" column="1">
+          <widget class="QCheckBox" name="debugCheckBox">
+           <property name="text">
+            <string>Don't check this</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="0">
+          <widget class="QLabel" name="debugLabel">
+           <property name="text">
+            <string>Don't Turn This On!</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="deviceTab">
+       <attribute name="title">
+        <string>Image</string>
+       </attribute>
+       <widget class="QWidget" name="formLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>-1</x>
+          <y>-1</y>
+          <width>581</width>
+          <height>421</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="deviceTabLayout">
+         <property name="horizontalSpacing">
+          <number>16</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>12</number>
+         </property>
+         <property name="leftMargin">
+          <number>8</number>
+         </property>
+         <property name="topMargin">
+          <number>8</number>
+         </property>
+         <property name="rightMargin">
+          <number>8</number>
+         </property>
+         <property name="bottomMargin">
+          <number>8</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="ISOLabel">
+           <property name="text">
+            <string>ISO</string>
+           </property>
+           <property name="buddy">
+            <cstring>ISOComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="exposureCompensationLabel">
+           <property name="text">
+            <string>Exposure Compensation</string>
+           </property>
+           <property name="buddy">
+            <cstring>autoExposureCompensationCheckBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="rotationLabel">
+           <property name="text">
+            <string>Rotation</string>
+           </property>
+           <property name="buddy">
+            <cstring>rotationGlider</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="magnifyLabel">
+           <property name="text">
+            <string>Magnify</string>
+           </property>
+           <property name="buddy">
+            <cstring>magnifySlider</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="freezeCameraLabel">
+           <property name="text">
+            <string>Pause Camera Update</string>
+           </property>
+           <property name="buddy">
+            <cstring>freezeCameraCheckBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QCheckBox" name="freezeCameraCheckBox">
+           <property name="text">
+            <string>Enable</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="antialiasingLabel">
+           <property name="text">
+            <string>Antialiasing</string>
+           </property>
+           <property name="buddy">
+            <cstring>antialiasingCheckBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QCheckBox" name="antialiasingCheckBox">
+           <property name="text">
+            <string>Enable</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="whiteBalanceModeLabel">
+           <property name="text">
+            <string>White Balance Mode</string>
+           </property>
+           <property name="buddy">
+            <cstring>whiteBalanceModeComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="exposureCompensationLayout">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="autoExposureCompensationCheckBox">
+             <property name="minimumSize">
+              <size>
+               <width>60</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Auto</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="exposureCompensationSlider">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimum">
+              <number>-20</number>
+             </property>
+             <property name="maximum">
+              <number>20</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="exposureCompensationValueLabel">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>0.0</string>
+             </property>
+             <property name="buddy">
+              <cstring>exposureCompensationSlider</cstring>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="1">
+          <layout class="QHBoxLayout" name="rotationLayout">
+           <item>
+            <widget class="QPushButton" name="resetRotationButton">
+             <property name="maximumSize">
+              <size>
+               <width>60</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Reset</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="rotationGlider">
+             <property name="minimum">
+              <number>-180</number>
+             </property>
+             <property name="maximum">
+              <number>180</number>
+             </property>
+             <property name="singleStep">
+              <number>45</number>
+             </property>
+             <property name="pageStep">
+              <number>45</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="rotationValueLabel">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>0°</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="1">
+          <layout class="QHBoxLayout" name="magnifyLayout">
+           <item>
+            <widget class="QSlider" name="magnifySlider">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="ISOComboBox">
+           <item>
+            <property name="text">
+             <string>Auto</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>50</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>100</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>200</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>400</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>800</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>1600</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <layout class="QHBoxLayout" name="whiteBalanceModeLayout">
+           <item>
+            <widget class="QComboBox" name="whiteBalanceModeComboBox">
+             <item>
+              <property name="text">
+               <string>Auto</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Manual</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sunlight</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Cloudy</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Shade</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tungsten</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Fluorescent</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Flash</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sunset</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="colorTemperatureSlider">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimum">
+              <number>500</number>
+             </property>
+             <property name="maximum">
+              <number>7500</number>
+             </property>
+             <property name="singleStep">
+              <number>50</number>
+             </property>
+             <property name="pageStep">
+              <number>50</number>
+             </property>
+             <property name="value">
+              <number>4000</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="colorTemperatureValueLabel">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>4000K</string>
+             </property>
+             <property name="buddy">
+              <cstring>colorTemperatureSlider</cstring>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="8" column="1">
+          <widget class="QCheckBox" name="keepImageSettingsCheckBox">
+           <property name="text">
+            <string>Keep Image Settings</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QPushButton" name="resetImageSettingsButton">
+           <property name="text">
+            <string>Reset Image Settings</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0" colspan="2">
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="presetsTab">
+       <attribute name="title">
+        <string>Presets</string>
+       </attribute>
+       <widget class="QWidget" name="formLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>-1</x>
+          <y>-1</y>
+          <width>581</width>
+          <height>421</height>
+         </rect>
+        </property>
+        <layout class="QFormLayout" name="presetsTabLayout">
+         <property name="horizontalSpacing">
+          <number>16</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>12</number>
+         </property>
+         <property name="leftMargin">
+          <number>8</number>
+         </property>
+         <property name="topMargin">
+          <number>8</number>
+         </property>
+         <property name="rightMargin">
+          <number>8</number>
+         </property>
+         <property name="bottomMargin">
+          <number>8</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="defaultPenWidthLabel">
+           <property name="text">
+            <string>Default Pen Width</string>
+           </property>
+           <property name="buddy">
+            <cstring>defaultPenWidthSlider</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="defaultEraserWidthLabel">
+           <property name="text">
+            <string>Default Eraser Width</string>
+           </property>
+           <property name="buddy">
+            <cstring>defaultEraserWidthSlider</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="penColor1Label">
+           <property name="text">
+            <string>Pen Color #1</string>
+           </property>
+           <property name="buddy">
+            <cstring>penColor1SelectButton</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <layout class="QHBoxLayout" name="penColor1Layout">
+           <item>
+            <widget class="QLabel" name="penColor1ValueLabel">
+             <property name="text">
+              <string>(255, 255, 255)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="penColor1SelectButton">
+             <property name="text">
+              <string>Select...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="penColor2Label">
+           <property name="text">
+            <string>Pen Color #2</string>
+           </property>
+           <property name="buddy">
+            <cstring>penColor2SelectButton</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <layout class="QHBoxLayout" name="penColor2Layout">
+           <item>
+            <widget class="QLabel" name="penColor2ValueLabel">
+             <property name="text">
+              <string>(0, 0, 0)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="penColor2SelectButton">
+             <property name="text">
+              <string>Select...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="penColor3Label">
+           <property name="text">
+            <string>Pen Color #3</string>
+           </property>
+           <property name="buddy">
+            <cstring>penColor3SelectButton</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <layout class="QHBoxLayout" name="penColor3Layout">
+           <item>
+            <widget class="QLabel" name="penColor3ValueLabel">
+             <property name="text">
+              <string>(255, 30, 50)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="penColor3SelectButton">
+             <property name="text">
+              <string>Select...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="penColor4Label">
+           <property name="text">
+            <string>Pen Color #4</string>
+           </property>
+           <property name="buddy">
+            <cstring>penColor4SelectButton</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <layout class="QHBoxLayout" name="penColor4Layout">
+           <item>
+            <widget class="QLabel" name="penColor4ValueLabel">
+             <property name="text">
+              <string>(240, 255, 0)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="penColor4SelectButton">
+             <property name="text">
+              <string>Select...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="penColor5Label">
+           <property name="text">
+            <string>Pen Color #5</string>
+           </property>
+           <property name="buddy">
+            <cstring>penColor5SelectButton</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <layout class="QHBoxLayout" name="penColor5Layout">
+           <item>
+            <widget class="QLabel" name="penColor5ValueLabel">
+             <property name="text">
+              <string>(20, 230, 100)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="penColor5SelectButton">
+             <property name="text">
+              <string>Select...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="penColor6Label">
+           <property name="text">
+            <string>Pen Color #6</string>
+           </property>
+           <property name="buddy">
+            <cstring>penColor6SelectButton</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <layout class="QHBoxLayout" name="penColor6Layout">
+           <item>
+            <widget class="QLabel" name="penColor6ValueLabel">
+             <property name="text">
+              <string>(50, 90, 255)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="penColor6SelectButton">
+             <property name="text">
+              <string>Select...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="8" column="0">
+          <widget class="QLabel" name="defaultPenColorLabel">
+           <property name="text">
+            <string>Default Pen Color</string>
+           </property>
+           <property name="buddy">
+            <cstring>defaultPenColorComboBox</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="8" column="1">
+          <widget class="QComboBox" name="defaultPenColorComboBox">
+           <item>
+            <property name="text">
+             <string>#1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>#2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>#3</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>#4</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>#5</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>#6</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="defaultPenWidthLayout">
+           <item>
+            <widget class="QSlider" name="defaultPenWidthSlider">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>25</number>
+             </property>
+             <property name="pageStep">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <number>4</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="defaultPenWidthValueLabel">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>4</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="defaultEraserWidthLayout">
+           <item>
+            <widget class="QSlider" name="defaultEraserWidthSlider">
+             <property name="minimum">
+              <number>60</number>
+             </property>
+             <property name="maximum">
+              <number>150</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="defaultEraserWidthValueLabel">
+             <property name="minimumSize">
+              <size>
+               <width>40</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>60</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>configTabWidget</tabstop>
+  <tabstop>languageComboBox</tabstop>
+  <tabstop>cameraDeviceComboBox</tabstop>
+  <tabstop>refreshRateComboBox</tabstop>
+  <tabstop>clickToScreenshotCheckBox</tabstop>
+  <tabstop>holdConvertionCheckBox</tabstop>
+  <tabstop>convertionMenuCheckBox</tabstop>
+  <tabstop>ISOComboBox</tabstop>
+  <tabstop>autoExposureCompensationCheckBox</tabstop>
+  <tabstop>exposureCompensationSlider</tabstop>
+  <tabstop>resetRotationButton</tabstop>
+  <tabstop>rotationGlider</tabstop>
+  <tabstop>magnifySlider</tabstop>
+  <tabstop>freezeCameraCheckBox</tabstop>
+  <tabstop>antialiasingCheckBox</tabstop>
+  <tabstop>whiteBalanceModeComboBox</tabstop>
+  <tabstop>colorTemperatureSlider</tabstop>
+  <tabstop>defaultPenWidthSlider</tabstop>
+  <tabstop>defaultEraserWidthSlider</tabstop>
+  <tabstop>penColor1SelectButton</tabstop>
+  <tabstop>penColor2SelectButton</tabstop>
+  <tabstop>penColor3SelectButton</tabstop>
+  <tabstop>penColor4SelectButton</tabstop>
+  <tabstop>penColor5SelectButton</tabstop>
+  <tabstop>penColor6SelectButton</tabstop>
+  <tabstop>defaultPenColorComboBox</tabstop>
+ </tabstops>
+ <resources>
+  <include location="MainInterface.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>autoExposureCompensationCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>exposureCompensationSlider</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>289</x>
+     <y>81</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

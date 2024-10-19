@@ -20,6 +20,7 @@
 #include "PenGraphicsItem.h"
 #include "EraserGraphicsItem.h"
 #include "AnimationMenu.h"
+#include "Configuration.h"
 
 const int MAXIMUM_X_OFFSET = 0;
 const int MAXIMUM_Y_OFFSET = 0;
@@ -43,7 +44,7 @@ class FrameGraphicsView  : public QGraphicsView
 
 public:
     enum nowState{FrameSelect, FramePen, FrameEraser};
-    FrameGraphicsView(QWidget *parent);
+    FrameGraphicsView(Configuration* configObj, QWidget *parent);
     ~FrameGraphicsView();
     void resetViewPort(int width, int height);
     void setFrameDraggable(nowState val);
@@ -62,6 +63,7 @@ public:
     bool isTouchPressing = false;
 
 private:
+    Configuration* configObject;
     QPoint posAnchor;
     void recognizePen();
     void functionMenu();
@@ -90,5 +92,5 @@ protected:
 
 signals:
     void addSlider(int, int, QPoint);
-
+    void penDown();
 };

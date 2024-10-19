@@ -19,7 +19,9 @@
 constexpr int ButtonWidth = 55;
 constexpr int SeparatorWidth = 14;
 constexpr int ToolBarHeight = 76;
-constexpr int ToolBarMargin = 10;
+constexpr int ToolBarMargin = 8;
+constexpr int ToolBarBottomMargin = -4;
+constexpr int ToolBarSink = 28;
 
 class UnderToolBar  : public QWidget
 {
@@ -32,6 +34,11 @@ public:
 	void addSeparator();
 	int getWidth();
 	QSharedPointer<QPropertyAnimation> moveAnimation;
+
+	void sinkBar(int y);
+	void floatBar(int y);
+
+	int sinkState = 0; // 0: up 1: sinking
 
 private:
 	QList<QWidget*> widgetList;

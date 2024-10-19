@@ -13,18 +13,7 @@
   <property name="windowTitle">
    <string>InsightCamera</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <widget class="FrameGraphicsView" name="CameraFrame">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>160</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -61,13 +50,6 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>FrameGraphicsView</class>
-   <extends>QGraphicsView</extends>
-   <header>FrameGraphicsView.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="MainInterface.qrc"/>
  </resources>

@@ -50,15 +50,17 @@ static void myMessageOutput(QtMsgType type, const QMessageLogContext& context, c
 
 int main(int argc, char *argv[])
 {
+    Configuration configuration = Configuration(nullptr);
     QApplication a(argc, argv);
-    //qInstallMessageHandler(myMessageOutput);
+
     QTranslator translator;
-    bool succeed = translator.load("InsightCamera_lang__zh_CN.qm");
+    QString lang = configuration.getConfig("language").toString();
+    bool succeed = true;
+    if (lang == "zh_cn")
+        succeed = translator.load("InsightCamera_lang__zh_CN.qm");
     a.installTranslator(&translator);
-    //auto file = QFile(":/MainInterface/StyleSheet");
-    //auto sheet = file.readAll().toStdString();
-    //a.setStyleSheet(QString::fromStdString(sheet));
-    MainInterface w;
+
+    MainInterface w = MainInterface(&configuration);
     w.show();
     return a.exec();
 }

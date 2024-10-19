@@ -85,6 +85,15 @@
     <ClCompile Include="AnimationSlider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Configuration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageIndexWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="CameraManager.h">
@@ -132,6 +141,15 @@
     <QtMoc Include="AnimationSlider.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="ConfigDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Configuration.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ImageIndexWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <None Include="StyleSheets\StyleSheet.qss">
@@ -149,6 +167,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="PenOptionsWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ConfigDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="ImageIndexWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

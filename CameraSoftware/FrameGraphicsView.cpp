@@ -1,9 +1,10 @@
 #include "FrameGraphicsView.h"
 
-FrameGraphicsView::FrameGraphicsView(QWidget *parent)
+FrameGraphicsView::FrameGraphicsView(Configuration* configObj, QWidget *parent)
     : QGraphicsView(parent)
 {
-    setRenderHints(QPainter::Antialiasing);
+    configObject = configObj;
+    //setRenderHints(QPainter::Antialiasing);
     penItems.reserve(1024);
     setStyleSheet("QGraphicsView{background: rgb(120, 120, 120);}");
     setDragMode(QGraphicsView::NoDrag);
@@ -193,6 +194,8 @@ void FrameGraphicsView::menuReturnAction(int action)
 
 void FrameGraphicsView::recognizePen()
 {
+    if (not configObject->getConfig("holdingLineConvertion").toBool())
+        return;
     if (frameState == FramePen) {
         if (not currentPenItem) {
             return;
@@ -231,7 +234,8 @@ void FrameGraphicsView::recognizePen()
         scene()->removeItem(currentPenItem);
         delete currentPenItem;
         currentPenItem = nullptr;
-        menuTimer->start(580);
+        if (configObject->getConfig("longHoldingConvertionMenu").toBool())
+            menuTimer->start(580);
     }
     else if (frameState == FrameSelect) {
         if (isMousePressing)
@@ -276,6 +280,7 @@ void FrameGraphicsView::mousePressEvent(QMouseEvent* event)
         return;
     }
     QGraphicsView::mousePressEvent(event);
+    emit penDown();
     isMousePressing = true;
     if (frameState == FrameSelect) {
         dragLastPoint = event->pos() - event->pos() + QPointF(width() / 2 / scaledRatio / scaledRatio, height() / 2 / scaledRatio / scaledRatio);
@@ -563,6 +568,7 @@ bool FrameGraphicsView::event(QEvent* event)
             return true;
         }
         isTouchPressing = true;
+        emit penDown();
         auto touchPointPos = touchEvent->touchPoints().first().pos().toPoint();
         if (frameState == FrameSelect) {
             dragLastPoint = touchPointPos - touchPointPos + QPointF(width() / 2 / scaledRatio / scaledRatio, height() / 2 / scaledRatio / scaledRatio);
@@ -611,9 +617,11 @@ bool FrameGraphicsView::event(QEvent* event)
         if (touchEvent->pointCount() >= 2) {
             return true;
         }
-        isTouchPressing = true;
         auto touchPointPos = touchEvent->touchPoints().first().pos().toPoint();
         if (frameState == FrameSelect) {
+            if (not isTouchPressing) {
+                return true;
+            }
             auto movedVal = touchPointPos - selectLastPoint;
             if (abs(movedVal.x()) + abs(movedVal.y()) > (holdTimer->isActive() ? 5 : 2)) {
                 QPointF offsetPos = touchPointPos - posAnchor;
@@ -628,6 +636,7 @@ bool FrameGraphicsView::event(QEvent* event)
             }
         }
         else if (frameState == FramePen) {
+            isTouchPressing = true;
             if (not currentPenItem) {
                 dragLastPoint = touchPointPos;
                 currentPenItem = new PenGraphicsItem(this);
@@ -654,6 +663,7 @@ bool FrameGraphicsView::event(QEvent* event)
             }
         }
         else if (frameState == FrameEraser) {
+            isTouchPressing = true;
             // Create Eraser item or extend its path
             if (not currentEraserItem) {
                 dragLastPoint = touchPointPos;
@@ -733,7 +743,7 @@ bool FrameGraphicsView::event(QEvent* event)
                                 newPath = QPainterPath();
                                 // Switch the collision state to "colliding".
                                 nowInItemState = 1;
-                                // Get into nect cycle.
+                                // Get into next cycle.
                                 continue;
                             }
                         }

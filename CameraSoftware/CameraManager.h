@@ -6,6 +6,7 @@
 #include <QtMultimedia/QMediaDevices>
 #include <QtCore/QString>
 #include <QtCore/QList>
+#include <QtCore/QMutex>
 
 class CameraManager  : public QObject
 {

@@ -9,6 +9,8 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QApplication>
+#include <QMouseEvent>
+#include <QScrollBar>
 
 class CaptureListWidget  : public QListWidget
 {
@@ -27,6 +29,13 @@ public:
 private:
 	void clickedItem(QListWidgetItem* pos);
 	int selectingIndex = -1;
+	QPoint dragStart = QPoint();
+	bool dragged = false;
+
+protected:
+	void mousePressEvent(QMouseEvent* event) override;
+	void mouseMoveEvent(QMouseEvent* event) override;
+	void mouseReleaseEvent(QMouseEvent* event) override;
 
 signals:
 	void indexChanged(int);

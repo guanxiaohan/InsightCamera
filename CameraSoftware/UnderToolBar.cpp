@@ -64,3 +64,33 @@ int UnderToolBar::getWidth()
 	}
 	return totalWidth;
 }
+
+void UnderToolBar::sinkBar(int y)
+{
+	if (sinkState == 1)
+		return;
+	sinkState = 1;
+	if (moveAnimation->state() == QPropertyAnimation::Running) {
+		moveAnimation->stop();
+	}
+	QRect start = moveAnimation->endValue().toRect();
+	moveAnimation->setStartValue(start);
+	start.setY(y);
+	moveAnimation->setEndValue(start);
+	moveAnimation->start();
+}
+
+void UnderToolBar::floatBar(int y)
+{
+	if (sinkState == 0)
+		return;
+	sinkState = 0;
+	if (moveAnimation->state() == QPropertyAnimation::Running) {
+		moveAnimation->stop();
+	}
+	QRect start = moveAnimation->endValue().toRect();
+	moveAnimation->setStartValue(start);
+	start.setY(y);
+	moveAnimation->setEndValue(start);
+	moveAnimation->start();
+}
